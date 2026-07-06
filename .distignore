@@ -1,0 +1,50 @@
+# === Single source of truth: was AUS dem verteilten hubbee.zip ausgeschlossen wird ===
+# Konsumiert von build-plugin-zip.sh via `rsync --exclude-from`.
+
+# VCS / Editor / OS
+.git
+.github
+.vscode
+.DS_Store
+
+# Build-Tooling & Source (nicht zur Laufzeit nötig)
+node_modules
+src
+docs
+scripts
+*.map
+vite.config.ts
+vite.backgrounds.config.ts
+vite.elements.config.ts
+vite.textfx.config.ts
+tsconfig.json
+tsconfig.tsbuildinfo
+package.json
+package-lock.json
+
+# PHP-Dev-Deps & Tests (Plugin nutzt eigenen PSR-4-Autoloader, nicht composer's)
+composer.json
+composer.lock
+vendor
+phpunit.xml
+tests
+.phpunit.result.cache
+
+# Repo-interne Docs / Specs
+openapi.yaml
+SAAS_REQUIREMENTS.md
+.distignore
+
+# Frühere Build-Outputs / wp.org-Marketing-Assets (gehören in SVN /assets, nicht ins ZIP)
+hubbee-release.zip
+wp-org-assets
+
+# Effekt-Chunks — werden DYNAMISCH vom SaaS beim Push installiert, nie gebündelt.
+assets/js/backgrounds/bg-*.min.js
+assets/js/elements/el-*.min.js
+assets/js/textfx/tx-*.min.js
+
+# vendor-react ist auf assets/js/backgrounds/vendor-react.min.js dedupliziert;
+# die elements/textfx-Kopien sind retired — defensiv ausschließen, falls ein Build sie neu erzeugt.
+assets/js/elements/vendor-react.min.js
+assets/js/textfx/vendor-react.min.js

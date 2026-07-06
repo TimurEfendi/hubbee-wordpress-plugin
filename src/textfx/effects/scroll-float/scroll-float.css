@@ -1,0 +1,11 @@
+/*
+ * WP-only typography reset (see effects/shuffle/shuffle.css for rationale).
+ * ScrollFloat.css hardcodes demo `font-size: clamp(1.6rem,8vw,10rem)`,
+ * `font-weight: 900`, `line-height: 1.5` on `.scroll-float-text`; on WP inherit
+ * the host element's. Scoped under `.bz-tx-layer` → preview unchanged.
+ */
+.bz-tx-layer .scroll-float-text {
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+}

@@ -1,0 +1,169 @@
+.carousel-container {
+  position: relative;
+  overflow: hidden;
+  /* Outer frame is configurable: hidden by default (no empty border on WP),
+     shown with a colour/gradient/opacity when `showOuterContainer` is on. */
+  border: var(--hb-carousel-frame-border, none);
+  background: var(--hb-carousel-frame-bg, transparent);
+  border-radius: 24px;
+  padding: 16px;
+  --outer-r: 24px;
+  --p-distance: 12px;
+}
+
+.carousel-track {
+  display: flex;
+}
+
+.carousel-item {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  border: 1px solid #555;
+  border-radius: calc(var(--outer-r) - var(--p-distance));
+  /* Inner card background — shows behind transparent PNGs; driven by the
+     `cardBackground` (inner card) control via the wrapper. */
+  background: var(--hb-card-bg, #1B1722);
+  overflow: hidden;
+  cursor: grab;
+}
+
+/* Full-bleed image fill (behind the caption) when an item has an image. */
+.carousel-item-image {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.carousel-item-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.carousel-item:active {
+  cursor: grabbing;
+}
+
+.carousel-container.round {
+  border: var(--hb-carousel-frame-border, none);
+}
+
+.carousel-item.round {
+  background: var(--hb-card-bg, #1B1722);
+  position: relative;
+  bottom: 0.1em;
+  border: 1px solid #555;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.carousel-item-header.round {
+  padding: 0;
+  margin: 0;
+}
+
+.carousel-indicators-container.round {
+  position: absolute;
+  z-index: 2;
+  bottom: 3em;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.carousel-indicator.active {
+  background-color: #333333;
+}
+
+.carousel-indicator.inactive {
+  background-color: rgba(51, 51, 51, 0.4);
+}
+
+.carousel-item-header {
+  margin-bottom: 16px;
+  padding: 20px;
+  padding-top: 20px;
+}
+
+.carousel-icon-container {
+  display: flex;
+  height: 28px;
+  width: 28px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #fff;
+}
+
+.carousel-icon {
+  height: 16px;
+  width: 16px;
+  color: #120F17;
+}
+
+.carousel-item-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 20px;
+  padding-bottom: 20px;
+}
+
+/* Caption sits at the bottom over the image, with a legibility gradient. */
+.carousel-item-content.over-image {
+  margin-top: auto;
+  padding-top: 48px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.25) 55%, transparent);
+}
+
+/* Item typography is driven by the wrapper (itemFont/itemFontSize/itemColor)
+   via CSS vars, scoped to the wrapper div — no global <style> leak. */
+.carousel-item-title {
+  margin-bottom: 4px;
+  font-weight: 900;
+  font-family: var(--hb-carousel-item-font, inherit);
+  font-size: var(--hb-carousel-item-size, 18px);
+  color: var(--hb-carousel-item-color, #fff);
+}
+
+.carousel-item-description {
+  font-family: var(--hb-carousel-item-font, inherit);
+  font-size: 14px;
+  color: var(--hb-carousel-item-color, #fff);
+}
+
+.carousel-indicators-container {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.carousel-indicators {
+  margin-top: 16px;
+  display: flex;
+  width: 150px;
+  justify-content: space-between;
+  padding: 0 32px;
+}
+
+.carousel-indicator {
+  height: 8px;
+  width: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 150ms;
+}
+
+.carousel-indicator.active {
+  background-color: #fff;
+}
+
+.carousel-indicator.inactive {
+  background-color: #555;
+}

@@ -1,0 +1,33 @@
+/* Hubbee adaptations for TrueFocus — layered on top of the 1:1 vendor CSS.
+   Higher specificity (.focus-container .x) than the vendor's .x rules, so
+   these win regardless of injection order. */
+
+/* Font family + size + weight come from the ORIGINAL WordPress text element
+   (the runtime mirrors them onto .bz-tx-layer), not the vendor's hardcoded
+   3rem / 900. In the configurator they inherit the preview's font instead. */
+.focus-container .focus-word {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+/* The corner glow follows Border Color (the vendor's own .corner rule —
+   drop-shadow(0 0 4px var(--border-color)) — applies; no separate glow color). */
+
+/* WordPress/Elementor themes add a default border/outline to inline elements;
+   keep the focus words + frame borderless so ONLY the .corner brackets show
+   (otherwise a stray gray box appears around the focused word on WP). The
+   corner spans keep their own borders above. */
+.focus-container .focus-word,
+.focus-container .focus-frame {
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
+/* WP-only: follow the host element's horizontal alignment. The vendor
+   hardcodes justify-content:center on the flex row; the chunk entry maps the
+   layer's mirrored text-align onto --bz-tf-justify. Scoped under .bz-tx-layer
+   so the configurator preview keeps the centered showcase. */
+.bz-tx-layer .focus-container {
+  justify-content: var(--bz-tf-justify, center);
+}

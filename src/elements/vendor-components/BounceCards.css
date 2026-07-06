@@ -1,0 +1,28 @@
+.bounceCardsContainer {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 400px;
+  height: 400px;
+}
+
+.bounceCardsContainer .card {
+  position: absolute;
+  /* Explicit width AND height (driven by the --bc-card-size prop var) — this
+     scoped selector (0,2,0) beats any bare `.card` rule (0,1,0) that leaks in
+     from the shared app bundle, so the cards stay square in the editor preview
+     exactly like the WP frontend. */
+  width: var(--bc-card-size, 200px);
+  height: var(--bc-card-size, 200px);
+  border: 5px solid #fff;
+  border-radius: 25px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.bounceCardsContainer .card .image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

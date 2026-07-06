@@ -1,0 +1,550 @@
+/**
+ * Hubbee Admin Styles
+ *
+ * Premium, on-brand (Hubbee violet) styling for the Hubbee Agent settings page.
+ * Mirrors the SaaS dashboard design tokens while respecting WP-admin conventions.
+ *
+ * @package Hubbee
+ */
+
+/* ==========================================================================
+   Design Tokens — mirrored from the SaaS dashboard (src/index.css :root)
+   ONE brand theme = violet. No separate palette.
+   ========================================================================== */
+
+:root {
+    /* Brand */
+    --bz-primary: hsl(263 70% 50%);          /* #7c3aed - Violet 600 */
+    --bz-primary-hover: hsl(263 70% 44%);    /* darker violet for hover */
+    --bz-primary-fg: #fff;
+    --bz-primary-text: hsl(263 70% 40%);     /* AA-safe violet for small text on white */
+    --bz-ring: hsl(263 70% 50%);             /* focus ring = primary */
+
+    --bz-accent: hsl(263 40% 95%);           /* light violet surface */
+    --bz-accent-fg: hsl(263 70% 40%);
+
+    /* Surfaces */
+    --bz-bg: hsl(210 40% 98%);               /* #f8fafc - Slate 50 */
+    --bz-card: #fff;
+    --bz-fg: hsl(222 47% 11%);               /* #0f172a - Slate 900 */
+    --bz-muted: hsl(215 16% 47%);            /* #64748b - Slate 500 */
+    --bz-border: hsl(214 32% 91%);           /* #e2e8f0 - Slate 200 */
+    --bz-code-bg: hsl(210 40% 96%);          /* Slate 100 */
+
+    /* Semantic status */
+    --bz-success: hsl(142 71% 45%);
+    --bz-success-bg: hsl(142 76% 95%);
+    --bz-success-fg: hsl(142 71% 28%);
+    --bz-warning: hsl(38 92% 50%);
+    --bz-warning-bg: hsl(38 92% 95%);
+    --bz-warning-fg: hsl(25 90% 34%);
+    --bz-destructive: hsl(0 84% 60%);
+    --bz-destructive-bg: hsl(0 86% 96%);
+    --bz-destructive-fg: hsl(0 72% 40%);
+
+    /* Shape + motion */
+    --bz-radius: 12px;
+    --bz-radius-sm: 8px;
+    --bz-radius-full: 9999px;
+    --bz-shadow: 0 1px 2px hsl(222 47% 11% / 0.04), 0 4px 12px hsl(222 47% 11% / 0.06);
+    --bz-shadow-sm: 0 1px 2px hsl(222 47% 11% / 0.05);
+    --bz-ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --bz-duration: 180ms;
+
+    /* Spacing scale */
+    --bz-space-1: 4px;
+    --bz-space-2: 8px;
+    --bz-space-3: 12px;
+    --bz-space-4: 16px;
+    --bz-space-5: 20px;
+    --bz-space-6: 24px;
+}
+
+/* ==========================================================================
+   Page shell
+   ========================================================================== */
+
+.bz-agent-settings {
+    max-width: 800px;
+    color-scheme: light;
+    color: var(--bz-fg);
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.bz-page-title {
+    display: flex;
+    align-items: center;
+    gap: var(--bz-space-3);
+    margin-bottom: var(--bz-space-5);
+    color: var(--bz-fg);
+}
+
+.bz-page-title .dashicons {
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+    color: var(--bz-primary);
+}
+
+/* ==========================================================================
+   Status Card
+   ========================================================================== */
+
+.bz-status-card {
+    background: var(--bz-card);
+    border: 1px solid var(--bz-border);
+    border-left-width: 4px;
+    border-radius: var(--bz-radius);
+    box-shadow: var(--bz-shadow);
+    padding: var(--bz-space-4) var(--bz-space-5);
+    margin-bottom: var(--bz-space-5);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--bz-space-4);
+}
+
+.bz-status-card.connected {
+    border-left-color: var(--bz-success);
+}
+
+.bz-status-card.disconnected {
+    border-left-color: var(--bz-warning);
+}
+
+.bz-status-indicator {
+    display: flex;
+    align-items: center;
+    gap: var(--bz-space-3);
+}
+
+.bz-status-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: var(--bz-radius-full);
+    background: var(--bz-warning);
+    box-shadow: 0 0 0 4px hsl(38 92% 50% / 0.18);
+}
+
+.bz-status-card.connected .bz-status-dot {
+    background: var(--bz-success);
+    box-shadow: 0 0 0 4px hsl(142 71% 45% / 0.18);
+}
+
+.bz-status-label {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--bz-fg);
+}
+
+.bz-last-sync {
+    color: var(--bz-muted);
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: var(--bz-space-1);
+}
+
+.bz-last-sync .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+}
+
+/* ==========================================================================
+   Onboarding Steps
+   ========================================================================== */
+
+.bz-onboarding {
+    background: var(--bz-card);
+    border: 1px solid var(--bz-border);
+    border-radius: var(--bz-radius);
+    box-shadow: var(--bz-shadow);
+    padding: var(--bz-space-5) var(--bz-space-6);
+    margin-bottom: var(--bz-space-5);
+}
+
+.bz-onboarding h2 {
+    margin-top: 0;
+    padding-bottom: var(--bz-space-3);
+    border-bottom: 1px solid var(--bz-border);
+    color: var(--bz-fg);
+}
+
+.bz-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.bz-step {
+    display: flex;
+    gap: var(--bz-space-5);
+    padding: var(--bz-space-5) 0;
+    border-bottom: 1px solid var(--bz-border);
+}
+
+.bz-step:last-child {
+    border-bottom: none;
+    padding-bottom: var(--bz-space-1);
+}
+
+.bz-step-number {
+    width: 40px;
+    height: 40px;
+    background: var(--bz-primary);
+    color: var(--bz-primary-fg);
+    border-radius: var(--bz-radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 18px;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px hsl(263 70% 50% / 0.30);
+}
+
+.bz-step-content h3 {
+    margin: 0 0 var(--bz-space-2);
+    font-size: 15px;
+    color: var(--bz-fg);
+}
+
+.bz-step-content p {
+    margin: 0 0 var(--bz-space-3);
+    color: var(--bz-muted);
+}
+
+.bz-step-content .button .dashicons {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    margin-left: var(--bz-space-1);
+    vertical-align: middle;
+}
+
+.bz-token-input {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    border: 1px solid var(--bz-border);
+    border-radius: var(--bz-radius-sm);
+    background: var(--bz-card);
+    color: var(--bz-fg);
+    transition: border-color var(--bz-duration) var(--bz-ease), box-shadow var(--bz-duration) var(--bz-ease);
+}
+
+.bz-token-input:focus {
+    border-color: var(--bz-primary);
+    box-shadow: 0 0 0 3px hsl(263 70% 50% / 0.20);
+    outline: none;
+}
+
+/* ==========================================================================
+   Connected Info
+   ========================================================================== */
+
+.bz-connected-info {
+    background: var(--bz-card);
+    border: 1px solid var(--bz-border);
+    border-left: 4px solid var(--bz-primary);
+    border-radius: var(--bz-radius);
+    box-shadow: var(--bz-shadow);
+    padding: var(--bz-space-5) var(--bz-space-6);
+    margin-bottom: var(--bz-space-5);
+}
+
+.bz-info-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.bz-info-table th {
+    text-align: left;
+    padding: var(--bz-space-2) 0;
+    width: 150px;
+    font-weight: 500;
+    color: var(--bz-muted);
+    vertical-align: top;
+}
+
+.bz-info-table td {
+    padding: var(--bz-space-2) 0;
+    color: var(--bz-fg);
+}
+
+.bz-info-table code,
+.bz-advanced-content code {
+    background: var(--bz-code-bg);
+    border: 1px solid var(--bz-border);
+    border-radius: var(--bz-radius-sm);
+    padding: 3px 7px;
+    font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px;
+    color: var(--bz-fg);
+}
+
+/* ==========================================================================
+   Advanced Section (collapsible)
+   ========================================================================== */
+
+.bz-advanced-section {
+    background: var(--bz-card);
+    border: 1px solid var(--bz-border);
+    border-radius: var(--bz-radius);
+    box-shadow: var(--bz-shadow-sm);
+    margin-bottom: var(--bz-space-5);
+    overflow: hidden;
+}
+
+.bz-advanced-section summary {
+    padding: var(--bz-space-3) var(--bz-space-4);
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--bz-fg);
+    display: flex;
+    align-items: center;
+    gap: var(--bz-space-2);
+    transition: background-color var(--bz-duration) var(--bz-ease);
+    list-style: none;
+}
+
+.bz-advanced-section summary::-webkit-details-marker {
+    display: none;
+}
+
+.bz-advanced-section summary:hover {
+    background: var(--bz-accent);
+}
+
+.bz-advanced-section summary:focus-visible {
+    outline: 2px solid var(--bz-ring);
+    outline-offset: -2px;
+}
+
+.bz-advanced-section summary .dashicons {
+    color: var(--bz-primary);
+}
+
+.bz-advanced-content {
+    padding: 0 var(--bz-space-5) var(--bz-space-5);
+    border-top: 1px solid var(--bz-border);
+}
+
+.bz-advanced-content hr {
+    margin: var(--bz-space-5) 0;
+    border: none;
+    border-top: 1px solid var(--bz-border);
+}
+
+.bz-advanced-content h3 {
+    margin-bottom: var(--bz-space-2);
+    color: var(--bz-fg);
+}
+
+.bz-advanced-content .description {
+    color: var(--bz-muted);
+}
+
+/* Links — brand violet */
+.bz-agent-settings a:not(.button) {
+    color: var(--bz-primary-text);
+    transition: color var(--bz-duration) var(--bz-ease);
+}
+
+.bz-agent-settings a:not(.button):hover {
+    color: var(--bz-primary-hover);
+}
+
+/* ==========================================================================
+   Buttons — brand the primary CTA, keep WP secondary buttons sane
+   ========================================================================== */
+
+.bz-agent-settings .button-primary {
+    background: var(--bz-primary);
+    border-color: var(--bz-primary);
+    color: var(--bz-primary-fg);
+    box-shadow: 0 1px 2px hsl(263 70% 50% / 0.25);
+    transition: background-color var(--bz-duration) var(--bz-ease),
+                border-color var(--bz-duration) var(--bz-ease),
+                box-shadow var(--bz-duration) var(--bz-ease);
+}
+
+.bz-agent-settings .button-primary:hover,
+.bz-agent-settings .button-primary:focus {
+    background: var(--bz-primary-hover);
+    border-color: var(--bz-primary-hover);
+    color: var(--bz-primary-fg);
+    box-shadow: 0 2px 8px hsl(263 70% 50% / 0.35);
+}
+
+.bz-agent-settings .button:focus-visible,
+.bz-agent-settings .button-primary:focus-visible {
+    outline: 2px solid var(--bz-ring);
+    outline-offset: 2px;
+    box-shadow: none;
+}
+
+.bz-agent-settings .button {
+    border-radius: var(--bz-radius-sm);
+    transition: border-color var(--bz-duration) var(--bz-ease),
+                color var(--bz-duration) var(--bz-ease),
+                background-color var(--bz-duration) var(--bz-ease);
+}
+
+.bz-agent-settings .button:not(.button-primary):hover {
+    border-color: var(--bz-primary);
+    color: var(--bz-primary-text);
+}
+
+/* Button Hero */
+.bz-agent-settings .button-hero {
+    padding: 10px 24px !important;
+    height: auto !important;
+    font-size: 14px !important;
+    border-radius: var(--bz-radius-sm) !important;
+}
+
+/* ==========================================================================
+   Messages
+   ========================================================================== */
+
+.bz-message {
+    padding: var(--bz-space-3) var(--bz-space-4);
+    margin-top: var(--bz-space-3);
+    border-left-width: 4px;
+    border-left-style: solid;
+    border-radius: var(--bz-radius-sm);
+    font-size: 13px;
+}
+
+.bz-message.success {
+    background: var(--bz-success-bg);
+    border-left-color: var(--bz-success);
+    color: var(--bz-success-fg);
+}
+
+.bz-message.error {
+    background: var(--bz-destructive-bg);
+    border-left-color: var(--bz-destructive);
+    color: var(--bz-destructive-fg);
+}
+
+.bz-message.hidden {
+    display: none;
+}
+
+/* "Still working / retry" hint shown when an action runs long */
+.bz-working-hint {
+    display: flex;
+    align-items: center;
+    gap: var(--bz-space-2);
+    margin-top: var(--bz-space-3);
+    padding: var(--bz-space-3) var(--bz-space-4);
+    border-radius: var(--bz-radius-sm);
+    background: var(--bz-accent);
+    color: var(--bz-accent-fg);
+    font-size: 13px;
+    border-left: 4px solid var(--bz-primary);
+}
+
+.bz-working-hint.hidden {
+    display: none;
+}
+
+/* ==========================================================================
+   Spinner — violet brand accent
+   ========================================================================== */
+
+.bz-agent-settings .spinner {
+    float: none;
+    margin-top: 0;
+    margin-left: var(--bz-space-2);
+    vertical-align: middle;
+}
+
+/* Replace WP's grey GIF spinner with a branded violet ring while active */
+.bz-agent-settings .spinner.is-active {
+    background: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid hsl(263 70% 50% / 0.25);
+    border-top-color: var(--bz-primary);
+    border-radius: var(--bz-radius-full);
+    animation: bz-spin 0.7s linear infinite;
+    opacity: 1;
+}
+
+@keyframes bz-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .bz-agent-settings .spinner.is-active {
+        animation-duration: 1.6s;
+    }
+    .bz-token-input,
+    .bz-advanced-section summary,
+    .bz-agent-settings .button,
+    .bz-agent-settings a:not(.button) {
+        transition: none;
+    }
+}
+
+/* ==========================================================================
+   Utilities
+   ========================================================================== */
+
+.hidden {
+    display: none !important;
+}
+
+/* ==========================================================================
+   Responsive — stack on small screens, ≥44px touch targets
+   ========================================================================== */
+
+@media (max-width: 600px) {
+    .bz-status-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--bz-space-3);
+    }
+
+    .bz-step {
+        flex-direction: column;
+        gap: var(--bz-space-3);
+    }
+
+    .bz-onboarding,
+    .bz-connected-info {
+        padding: var(--bz-space-4);
+    }
+
+    .bz-token-input {
+        max-width: 100%;
+        padding: 12px 14px;
+        font-size: 16px; /* prevents iOS zoom */
+    }
+
+    .bz-agent-settings .button,
+    .bz-agent-settings .button-hero {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .bz-info-table th {
+        width: auto;
+        display: block;
+        padding-bottom: 0;
+    }
+
+    .bz-info-table td {
+        display: block;
+        padding-top: var(--bz-space-1);
+    }
+}

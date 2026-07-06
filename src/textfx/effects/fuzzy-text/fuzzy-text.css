@@ -1,0 +1,16 @@
+/*
+ * WP-only positioning for fuzzy-text canvases (see FuzzyMultiline.tsx).
+ *
+ * The canvas stays IN FLOW (block) so it gives the runtime layer / Elementor
+ * host its width — taking it out of flow (negative margins or absolute) shrank
+ * or collapsed the host. The fuzz padding (FuzzyText draws the text inset by
+ * fuzzRange+20) is cancelled with a transform, which is visual-only and never
+ * affects layout. The chunk sets --bz-fuzz-tx from config.fuzzRange + the
+ * element's text-align (left → -pad, right → +pad, centre → 0).
+ *
+ * Scoped under `.bz-tx-layer` → WP only; configurator preview unchanged.
+ */
+.bz-tx-layer .bz-fuzzy-canvas {
+  display: block;
+  transform: translateX(var(--bz-fuzz-tx, -50px));
+}

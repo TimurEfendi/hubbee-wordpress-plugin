@@ -1,0 +1,45 @@
+/*
+ * WP-only overrides for gradient-text (see effects/shuffle/shuffle.css for the
+ * general rationale). GradientText.css is built as a dark-page "gradient badge"
+ * with `backdrop-filter: blur(10px)` on `.animated-gradient-text` and, when
+ * showBorder is on, a `.gradient-overlay` ring whose `::before` is a #120F17
+ * dark center. On a light WP page that blur is an orphaned rectangle (no border)
+ * and the #120F17 center is a dark pill. Scoped under `.bz-tx-layer` → WP only;
+ * the configurator preview keeps the showcase. Vendor CSS stays untouched.
+ *
+ * `font-weight: inherit` keeps the typography-from-element rule.
+ */
+.bz-tx-layer .animated-gradient-text {
+  font-weight: inherit;
+}
+
+/* showBorder OFF: the backdrop blur is just an orphaned blurred rectangle → drop it. */
+.bz-tx-layer .animated-gradient-text:not(.with-border) {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* showBorder ON: turn the gradient overlay into a real BORDER RING with a
+ * transparent center (frosted by the kept backdrop-filter), and drop the dark
+ * #120F17 fill — so the bordered badge works on a light page (no dark pill),
+ * with the blur sitting inside the border. */
+.bz-tx-layer .animated-gradient-text.with-border .gradient-overlay {
+  padding: 2px;
+  box-sizing: border-box;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+          mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+}
+.bz-tx-layer .animated-gradient-text.with-border .gradient-overlay::before {
+  background-color: transparent;
+}
+
+/* Alignment: the vendor centers the badge as a block (margin: 0 auto +
+   max-width: fit-content), ignoring the host element's alignment. Render it
+   inline-flex on WP so it flows with the layer's mirrored text-align
+   (left/center/right all follow the heading automatically). */
+.bz-tx-layer .animated-gradient-text {
+  display: inline-flex;
+  margin: 0;
+}

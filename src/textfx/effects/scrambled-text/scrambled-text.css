@@ -1,0 +1,19 @@
+/*
+ * WP-only reset for scrambled-text — EXCEPTION: inherit only the element's
+ * SIZE. ScrambledText.css is built for a centered demo block and sets, on
+ * `.text-block`: font-family: monospace; font-size: clamp(14px,4vw,32px);
+ * color: #fff; margin: 7vw; max-width: 800px.
+ *   - font-size  → inherit (match the element)
+ *   - monospace  → KEPT (stable char widths while the scramble swaps glyphs)
+ *   - color #fff → KEPT (effect colour)
+ *   - margin/max-width → dropped: demo layout that isn't on the element and
+ *     pushed the text in (7vw) + force-wrapped it (800px). Removing them lets
+ *     the element's size present cleanly.
+ * Scoped under `.bz-tx-layer` → WP only; configurator preview unchanged.
+ */
+.bz-tx-layer .text-block {
+  font-size: inherit;
+  color: inherit; /* vendor #fff is invisible on light WP pages — follow the host element */
+  margin: 0;
+  max-width: none;
+}

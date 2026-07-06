@@ -1,0 +1,400 @@
+# Copyright (C) 2024 Hubbee
+# This file is distributed under the GPL-2.0+.
+msgid ""
+msgstr ""
+"Project-Id-Version: Hubbee 2.0.0\n"
+"Report-Msgid-Bugs-To: https://hubbee.io/support\n"
+"POT-Creation-Date: 2024-01-15T10:00:00+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: hubbee.php
+msgid "Hubbee requires PHP 7.4 or higher."
+msgstr ""
+
+#: includes/Admin/MenuBuilder.php
+msgid "Hubbee"
+msgstr ""
+
+#: includes/Admin/MenuBuilder.php
+msgid "Dashboard"
+msgstr ""
+
+#: includes/Admin/MenuBuilder.php
+msgid "Tokens"
+msgstr ""
+
+#: includes/Admin/MenuBuilder.php
+msgid "Settings"
+msgstr ""
+
+#: includes/Admin/Pages/DashboardPage.php
+msgid "Hubbee Dashboard"
+msgstr ""
+
+#: includes/Admin/Pages/DashboardPage.php
+msgid "Connection Status"
+msgstr ""
+
+#: includes/Admin/Pages/DashboardPage.php
+msgid "Connected to Hubbee"
+msgstr ""
+
+#: includes/Admin/Pages/DashboardPage.php
+msgid "Not Connected"
+msgstr ""
+
+#: includes/Admin/Pages/DashboardPage.php
+msgid "Enrolled: %s"
+msgstr ""
+
+#: includes/Admin/Pages/DashboardPage.php
+msgid "Connect Now"
+msgstr ""
+
+#: includes/Admin/Pages/DashboardPage.php
+msgid "Token Statistics"
+msgstr ""
+
+#: includes/Admin/Pages/DashboardPage.php
+msgid "Tokens Stored"
+msgstr ""
+
+#: includes/Admin/Pages/DashboardPage.php
+msgid "View All Tokens"
+msgstr ""
+
+#: includes/Admin/Pages/DashboardPage.php
+msgid "Last Sync"
+msgstr ""
+
+#: includes/Admin/Pages/DashboardPage.php
+msgid "Last token update received from Hubbee"
+msgstr ""
+
+#: includes/Admin/Pages/DashboardPage.php
+msgid "No sync yet"
+msgstr ""
+
+#: includes/Admin/Pages/DashboardPage.php
+msgid "Tokens will be synced when you publish from the Hubbee dashboard."
+msgstr ""
+
+#: includes/Admin/Pages/DashboardPage.php
+msgid "Site Information"
+msgstr ""
+
+#: includes/Admin/Pages/DashboardPage.php
+msgid "Site ID"
+msgstr ""
+
+#: includes/Admin/Pages/DashboardPage.php
+msgid "Hubbee Site ID"
+msgstr ""
+
+#: includes/Admin/Pages/DashboardPage.php
+msgid "REST URL"
+msgstr ""
+
+#: includes/Admin/Pages/DashboardPage.php
+msgid "Plugin Version"
+msgstr ""
+
+#: includes/Admin/Pages/DashboardPage.php
+msgid "Quick Links"
+msgstr ""
+
+#: includes/Admin/Pages/DashboardPage.php
+msgid "Browse Tokens"
+msgstr ""
+
+#: includes/Admin/Pages/DashboardPage.php
+msgid "Elementor Templates"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php
+msgid "You do not have permission to access this page."
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php
+msgid "Hubbee Settings"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php
+msgid "SaaS Connection"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php
+msgid "Site ID: %s"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php
+msgid "Connected since: %s"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php
+msgid "Disconnect"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php
+msgid "Connect your site to Hubbee to receive token updates."
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php
+msgid "Connect to Hubbee"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php
+msgid "Enter your onboarding token from the Hubbee dashboard to connect this site."
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php
+msgid "Onboarding Token"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php
+msgid "Get this token from your Hubbee dashboard under \"Sites\" > \"Add Site\"."
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php
+msgid "Connect"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php
+msgid "Advanced Settings"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php
+msgid "SaaS Endpoint"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php
+msgid "The Hubbee SaaS endpoint URL. Only change this if instructed."
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php
+msgid "Local Site ID"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php
+msgid "REST API URL"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php
+msgid "Never"
+msgstr ""
+
+#: includes/Admin/Pages/TokenBrowserPage.php
+msgid "Browse tokens synced from Hubbee. Use these tokens in Elementor via Dynamic Tags."
+msgstr ""
+
+#: includes/Admin/Pages/TokenBrowserPage.php
+msgid "All Sections"
+msgstr ""
+
+#: includes/Admin/Pages/TokenBrowserPage.php
+msgid "Default Locale"
+msgstr ""
+
+#: includes/Admin/Pages/TokenBrowserPage.php
+msgid "Search tokens..."
+msgstr ""
+
+#: includes/Admin/Pages/TokenBrowserPage.php
+msgid "Filter"
+msgstr ""
+
+#: includes/Admin/Pages/TokenBrowserPage.php
+msgid "Clear"
+msgstr ""
+
+#: includes/Admin/Pages/TokenBrowserPage.php
+msgid "No tokens found."
+msgstr ""
+
+#: includes/Admin/Pages/TokenBrowserPage.php
+msgid "Tokens will appear here after you publish content from the Hubbee dashboard."
+msgstr ""
+
+#: includes/Admin/Pages/TokenBrowserPage.php
+msgid "Key"
+msgstr ""
+
+#: includes/Admin/Pages/TokenBrowserPage.php
+msgid "Label"
+msgstr ""
+
+#: includes/Admin/Pages/TokenBrowserPage.php
+msgid "Value"
+msgstr ""
+
+#: includes/Admin/Pages/TokenBrowserPage.php
+msgid "Type"
+msgstr ""
+
+#: includes/Admin/Pages/TokenBrowserPage.php
+msgid "Section"
+msgstr ""
+
+#: includes/Admin/Pages/TokenBrowserPage.php
+msgid "Locale"
+msgstr ""
+
+#: includes/Admin/Pages/TokenBrowserPage.php
+msgid "Version"
+msgstr ""
+
+#: includes/Admin/Pages/TokenBrowserPage.php
+msgid "Default"
+msgstr ""
+
+#. translators: %d: number of tokens
+#: includes/Admin/Pages/TokenBrowserPage.php
+msgid "%d token"
+msgid_plural "%d tokens"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/Admin/AssetManager.php
+msgid "Connecting..."
+msgstr ""
+
+#: includes/Admin/AssetManager.php
+msgid "Connected successfully!"
+msgstr ""
+
+#: includes/Admin/AssetManager.php
+msgid "Disconnected"
+msgstr ""
+
+#: includes/Admin/AssetManager.php
+msgid "An error occurred. Please try again."
+msgstr ""
+
+#: includes/Admin/AssetManager.php
+msgid "Please enter an onboarding token."
+msgstr ""
+
+#: includes/Admin/AssetManager.php
+msgid "Connection failed."
+msgstr ""
+
+#: includes/Admin/AssetManager.php
+msgid "Disconnect failed."
+msgstr ""
+
+#: includes/Admin/AssetManager.php
+msgid "Are you sure you want to disconnect from Hubbee? Your tokens will remain stored locally."
+msgstr ""
+
+#: includes/Admin/AssetManager.php
+msgid "Copied!"
+msgstr ""
+
+#: includes/Elementor/ElementorManager.php
+msgid "Hubbee"
+msgstr ""
+
+#: includes/Elementor/TextTokenTag.php
+msgid "Text Token"
+msgstr ""
+
+#: includes/Elementor/TextTokenTag.php
+msgid "Token"
+msgstr ""
+
+#: includes/Elementor/TextTokenTag.php
+msgid "Select the token to display."
+msgstr ""
+
+#: includes/Elementor/TextTokenTag.php
+msgid "Locale Override"
+msgstr ""
+
+#: includes/Elementor/TextTokenTag.php
+msgid "auto"
+msgstr ""
+
+#: includes/Elementor/TextTokenTag.php
+msgid "Leave empty for auto-detection based on site language."
+msgstr ""
+
+#: includes/Elementor/TextTokenTag.php
+msgid "Fallback Value"
+msgstr ""
+
+#: includes/Elementor/TextTokenTag.php
+msgid "Text to display if token is empty or not found."
+msgstr ""
+
+#: includes/Elementor/TextTokenTag.php
+msgid "Select a token"
+msgstr ""
+
+#: includes/Elementor/TextTokenTag.php
+msgid "No value"
+msgstr ""
+
+#: includes/Elementor/TextTokenTag.php
+msgid "No tokens available"
+msgstr ""
+
+#: includes/Elementor/TextTokenTag.php
+msgid "— Select Token —"
+msgstr ""
+
+#: includes/SaaS/EnrollmentService.php
+msgid "Missing onboarding token."
+msgstr ""
+
+#: includes/SaaS/EnrollmentService.php
+msgid "SaaS enrollment failed: %s"
+msgstr ""
+
+#: includes/SaaS/EnrollmentService.php
+msgid "Invalid response from SaaS."
+msgstr ""
+
+#: includes/SaaS/SignatureValidator.php
+msgid "Missing signature header."
+msgstr ""
+
+#: includes/SaaS/SignatureValidator.php
+msgid "Missing timestamp header."
+msgstr ""
+
+#: includes/SaaS/SignatureValidator.php
+msgid "Missing site ID header."
+msgstr ""
+
+#: includes/SaaS/SignatureValidator.php
+msgid "Request timestamp is too old."
+msgstr ""
+
+#: includes/SaaS/SignatureValidator.php
+msgid "Site is not connected to SaaS."
+msgstr ""
+
+#: includes/SaaS/SignatureValidator.php
+msgid "Invalid signature."
+msgstr ""
+
+#: includes/REST/PushEndpoint.php
+msgid "Tokens pushed successfully."
+msgstr ""
+
+#: includes/REST/PushEndpoint.php
+msgid "Request has already been processed."
+msgstr ""
+
+#: includes/REST/StatusEndpoint.php
+msgid "Site status retrieved."
+msgstr ""
+
+#: includes/REST/TestConnectionEndpoint.php
+msgid "Connection verified."
+msgstr ""

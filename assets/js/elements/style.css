@@ -1,0 +1,30 @@
+/* Element-Library mountpoint sizing.
+ *
+ * The Elementor "Hubbee Component" widget exposes a Height & Overflow
+ * control that writes `--bz-height` and `--bz-overflow` into the
+ * mountpoint's style attribute (see ComponentWidget::render(), the
+ * Phase-4 `style_parts` block). Without this stylesheet the WebGL /
+ * CSS-3D vendor components — all of which use `height: 100%` on their
+ * own root — collapse to 0, the renderer reads a `clientHeight` of a
+ * few pixels, and items, item-text and the vendor-rendered headline
+ * become unreadable.
+ *
+ * This file is enqueued conditionally in
+ * ComponentElementExtension::maybe_enqueue_global_scripts() (the
+ * `hubbee-el-style` handle). PHP only enqueues when the file exists,
+ * so dropping the file here is enough — no PHP change required. */
+
+.bz-el-mountpoint {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: var(--bz-height, 600px);
+  min-height: var(--bz-height, 600px);
+  overflow: var(--bz-overflow, visible);
+}
+
+.bz-el-mountpoint > .bz-el-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}

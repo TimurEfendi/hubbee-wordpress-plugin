@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Simplified Hubbee logo: purple hexagonal H -->
+  <!-- Top-left hexagon -->
+  <polygon points="8,2 14,5.5 14,12.5 8,16 2,12.5 2,5.5" fill="#6B4FA0"/>
+  <!-- Top-right hexagon -->
+  <polygon points="24,2 30,5.5 30,12.5 24,16 18,12.5 18,5.5" fill="#9B7ED8"/>
+  <!-- Center overlap -->
+  <polygon points="16,9 22,12.5 22,19.5 16,23 10,19.5 10,12.5" fill="#8367B8"/>
+  <!-- Bottom-left hexagon -->
+  <polygon points="8,16 14,19.5 14,26.5 8,30 2,26.5 2,19.5" fill="#7B5FB8"/>
+  <!-- Bottom-right hexagon -->
+  <polygon points="24,16 30,19.5 30,26.5 24,30 18,26.5 18,19.5" fill="#5A3D8A"/>
+</svg>

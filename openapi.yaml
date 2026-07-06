@@ -1,0 +1,622 @@
+openapi: 3.0.3
+info:
+  title: Hubbee API
+  description: |
+    API specification for the Hubbee WordPress plugin and SaaS integration.
+
+    ## Overview
+    The Hubbee system consists of two parts:
+    1. **Plugin Endpoints** - REST endpoints exposed by the WordPress plugin
+    2. **SaaS Endpoints** - Endpoints exposed by the Hubbee SaaS that the plugin calls
+
+    ## Authentication
+
+    ### SaaS → Plugin (Push)
+    Uses HMAC-SHA256 signature validation:
+    - `X-Hubbee-Signature`: HMAC-SHA256(timestamp + request_body, api_secret)
+    - `X-Hubbee-Timestamp`: Unix timestamp (must be within 5 minutes)
+    - `X-Hubbee-Site-Id`: Site ID for credential lookup
+
+    ### Plugin → SaaS (Enrollment)
+    Uses Bearer token authentication with the onboarding token.
+
+  version: 1.0.0
+  contact:
+    name: Hubbee Support
+    url: https://hubbee.io/help
+  license:
+    name: Proprietary
+
+servers:
+  - url: https://example.com/wp-json/bz/v1
+    description: WordPress Plugin REST API
+  - url: https://api.hubbee.io
+    description: Hubbee SaaS API
+
+tags:
+  - name: Plugin - Push
+    description: Endpoints for receiving token updates from SaaS
+  - name: Plugin - Status
+    description: Endpoints for site status information
+  - name: Plugin - Enrollment
+    description: Endpoints for SaaS connection management
+  - name: SaaS - Sites
+    description: SaaS endpoints for site management
+
+paths:
+  # ============================================================================
+  # PLUGIN ENDPOINTS (WordPress receives)
+  # ============================================================================
+
+  /push:
+    post:
+      tags:
+        - Plugin - Push
+      summary: Push tokens to WordPress
+      description: |
+        Receives token updates from the Hubbee SaaS.
+        Requires HMAC signature authentication.
+
+        Tokens are processed with version comparison - only tokens with a higher
+        version number than existing tokens will be updated.
+      operationId: pushTokens
+      security:
+        - hmacSignature: []
+      parameters:
+        - $ref: '#/components/parameters/HubbeeSignature'
+        - $ref: '#/components/parameters/HubbeeTimestamp'
+        - $ref: '#/components/parameters/HubbeeSiteId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PushRequest'
+            example:
+              request_id: "550e8400-e29b-41d4-a716-446655440000"
+              tokens:
+                - key: "hero_title"
+                  label: "Hero Title"
+                  description: "Main headline on the homepage"
+                  field_type: "text"
+                  value: "Welcome to Our Website"
+                  locale: ""
+                  version: 1
+                  section: "homepage"
+                - key: "hero_title"
+                  label: "Hero Title (DE)"
+                  description: "Main headline on the homepage"
+                  field_type: "text"
+                  value: "Willkommen auf unserer Website"
+                  locale: "de"
+                  version: 1
+                  section: "homepage"
+      responses:
+        '200':
+          description: Tokens processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PushResponse'
+              example:
+                success: true
+                processed: 2
+                skipped: 0
+                errors: []
+                request_id: "550e8400-e29b-41d4-a716-446655440000"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: Duplicate request (idempotency)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: "duplicate_request"
+                message: "Request has already been processed"
+                data:
+                  request_id: "550e8400-e29b-41d4-a716-446655440000"
+
+  /status:
+    get:
+      tags:
+        - Plugin - Status
+      summary: Get site status
+      description: Returns current site status and capabilities. No authentication required.
+      operationId: getStatus
+      responses:
+        '200':
+          description: Site status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+              example:
+                site_id: "bz_abc123def456"
+                plugin_version: "2.0.0"
+                rest_url: "https://example.com/wp-json/bz/v1/"
+                connected: true
+                token_count: 42
+                capabilities:
+                  - "receive_push"
+                  - "elementor_integration"
+
+  /enroll:
+    post:
+      tags:
+        - Plugin - Enrollment
+      summary: Enroll site with SaaS
+      description: |
+        Initiates the enrollment process with the Hubbee SaaS using an onboarding token.
+        This endpoint is called from the WordPress admin panel.
+      operationId: enrollSite
+      security:
+        - wpNonce: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - onboarding_token
+              properties:
+                onboarding_token:
+                  type: string
+                  description: Onboarding token from Hubbee dashboard
+                  example: "bz_onboard_xxxxxxxxxxxxxxxx"
+      responses:
+        '200':
+          description: Enrollment successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  site_id:
+                    type: string
+                    example: "site_abc123"
+                  message:
+                    type: string
+                    example: "Successfully connected to Hubbee"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /disconnect:
+    post:
+      tags:
+        - Plugin - Enrollment
+      summary: Disconnect from SaaS
+      description: Disconnects the site from Hubbee SaaS. Tokens remain stored locally.
+      operationId: disconnectSite
+      security:
+        - wpNonce: []
+      responses:
+        '200':
+          description: Disconnection successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Successfully disconnected from Hubbee"
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /test-connection:
+    post:
+      tags:
+        - Plugin - Status
+      summary: Test SaaS connection
+      description: |
+        Endpoint for SaaS to verify the connection is working.
+        Requires HMAC signature authentication.
+      operationId: testConnection
+      security:
+        - hmacSignature: []
+      parameters:
+        - $ref: '#/components/parameters/HubbeeSignature'
+        - $ref: '#/components/parameters/HubbeeTimestamp'
+        - $ref: '#/components/parameters/HubbeeSiteId'
+      responses:
+        '200':
+          description: Connection test successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Connection verified"
+                  site_id:
+                    type: string
+                    example: "bz_abc123def456"
+                  site_name:
+                    type: string
+                    example: "My WordPress Site"
+                  timestamp:
+                    type: string
+                    format: date-time
+                    example: "2024-01-15T10:30:00Z"
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  # ============================================================================
+  # SAAS ENDPOINTS (Plugin calls)
+  # ============================================================================
+
+  /api/v1/sites/enroll:
+    post:
+      tags:
+        - SaaS - Sites
+      summary: Enroll a new WordPress site
+      description: |
+        Called by the WordPress plugin during the enrollment process.
+        Validates the onboarding token and returns credentials for the site.
+      operationId: saasEnrollSite
+      servers:
+        - url: https://api.hubbee.io
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SiteEnrollRequest'
+            example:
+              name: "My WordPress Site"
+              url: "https://example.com"
+              rest_url: "https://example.com/wp-json/bz/v1/"
+              wp_version: "6.4.2"
+              php_version: "8.2.0"
+              plugin_version: "2.0.0"
+      responses:
+        '200':
+          description: Enrollment successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SiteEnrollResponse'
+              example:
+                site_id: "site_abc123"
+                api_secret: "<64-char-per-site-secret-returned-on-enrollment>"
+        '401':
+          description: Invalid or expired onboarding token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: "invalid_onboarding_token"
+                message: "The onboarding token is invalid or has expired"
+        '409':
+          description: Site already enrolled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: "site_already_enrolled"
+                message: "This site is already enrolled"
+
+  /api/v1/sites/{site_id}/tokens:
+    get:
+      tags:
+        - SaaS - Sites
+      summary: Get all tokens for a site (optional resync)
+      description: |
+        Returns all published tokens for a site. Can be used for initial sync
+        or to resync all tokens after data loss.
+      operationId: saasGetSiteTokens
+      servers:
+        - url: https://api.hubbee.io
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: site_id
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "site_abc123"
+        - name: since_version
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Only return tokens with version greater than this
+      responses:
+        '200':
+          description: Token list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tokens:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Token'
+                  total:
+                    type: integer
+                    example: 42
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Site not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    hmacSignature:
+      type: apiKey
+      in: header
+      name: X-Hubbee-Signature
+      description: HMAC-SHA256 signature of timestamp + request body
+
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Bearer token (onboarding token or API secret)
+
+    wpNonce:
+      type: apiKey
+      in: header
+      name: X-WP-Nonce
+      description: WordPress REST API nonce
+
+  parameters:
+    HubbeeSignature:
+      name: X-Hubbee-Signature
+      in: header
+      required: true
+      schema:
+        type: string
+      description: HMAC-SHA256 signature
+      example: "sha256=a1b2c3d4e5f6..."
+
+    HubbeeTimestamp:
+      name: X-Hubbee-Timestamp
+      in: header
+      required: true
+      schema:
+        type: integer
+      description: Unix timestamp (must be within 5 minutes of current time)
+      example: 1705312200
+
+    HubbeeSiteId:
+      name: X-Hubbee-Site-Id
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Site ID for credential lookup
+      example: "site_abc123"
+
+  schemas:
+    Token:
+      type: object
+      required:
+        - key
+        - value
+        - version
+      properties:
+        key:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: Unique token identifier
+          example: "hero_title"
+        label:
+          type: string
+          maxLength: 255
+          description: Human-readable label
+          example: "Hero Title"
+        description:
+          type: string
+          description: Token description/help text
+          example: "The main headline displayed on the homepage"
+        field_type:
+          type: string
+          enum: [text, textarea, richtext]
+          default: text
+          description: Content type of the token
+        value:
+          type: string
+          description: Token value/content
+          example: "Welcome to Our Website"
+        locale:
+          type: string
+          maxLength: 10
+          default: ""
+          description: Locale code (empty for default)
+          example: "de"
+        version:
+          type: integer
+          minimum: 1
+          description: Monotonic version number
+          example: 1
+        section:
+          type: string
+          maxLength: 100
+          default: "general"
+          description: Section for grouping tokens
+          example: "homepage"
+
+    PushRequest:
+      type: object
+      required:
+        - tokens
+      properties:
+        request_id:
+          type: string
+          format: uuid
+          description: Unique request ID for idempotency
+        tokens:
+          type: array
+          items:
+            $ref: '#/components/schemas/Token'
+          minItems: 1
+          description: Array of tokens to push
+
+    PushResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        processed:
+          type: integer
+          description: Number of tokens successfully processed
+        skipped:
+          type: integer
+          description: Number of tokens skipped (older version)
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+              error:
+                type: string
+        request_id:
+          type: string
+          format: uuid
+
+    StatusResponse:
+      type: object
+      properties:
+        site_id:
+          type: string
+          description: Local site identifier
+        plugin_version:
+          type: string
+          description: Installed plugin version
+        rest_url:
+          type: string
+          format: uri
+          description: REST API base URL
+        connected:
+          type: boolean
+          description: Whether connected to SaaS
+        token_count:
+          type: integer
+          description: Number of stored tokens
+        capabilities:
+          type: array
+          items:
+            type: string
+          description: Available capabilities
+
+    SiteEnrollRequest:
+      type: object
+      required:
+        - name
+        - url
+        - rest_url
+      properties:
+        name:
+          type: string
+          description: Site name
+        url:
+          type: string
+          format: uri
+          description: Site URL
+        rest_url:
+          type: string
+          format: uri
+          description: REST API URL
+        wp_version:
+          type: string
+          description: WordPress version
+        php_version:
+          type: string
+          description: PHP version
+        plugin_version:
+          type: string
+          description: Hubbee plugin version
+
+    SiteEnrollResponse:
+      type: object
+      properties:
+        site_id:
+          type: string
+          description: Assigned site ID
+        api_secret:
+          type: string
+          description: API secret for HMAC signing
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
+        data:
+          type: object
+          description: Additional error data
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            invalid_payload:
+              value:
+                code: "invalid_payload"
+                message: "Tokens array is required"
+            missing_key:
+              value:
+                code: "missing_key"
+                message: "Token key is required"
+            invalid_version:
+              value:
+                code: "invalid_version"
+                message: "Version must be a positive integer"
+
+    Unauthorized:
+      description: Authentication failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            missing_signature:
+              value:
+                code: "missing_signature"
+                message: "Missing signature header"
+            stale_request:
+              value:
+                code: "stale_request"
+                message: "Request timestamp is too old"
+            invalid_signature:
+              value:
+                code: "invalid_signature"
+                message: "Signature verification failed"

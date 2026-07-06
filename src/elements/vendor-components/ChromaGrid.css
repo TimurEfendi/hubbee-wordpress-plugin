@@ -1,0 +1,162 @@
+.chroma-grid {
+  position: relative;
+  width: 100%;
+  /* Content-driven height: the grid must GROW as items wrap to new rows.
+     `height:100%` made it parent-bound, so a 2nd row was clipped (text vanished). */
+  height: auto;
+  display: grid;
+  /* Columns cap at 320px but shrink to fit a narrow container (e.g. the editor
+     preview pane / small screens) instead of overflowing horizontally. On a wide
+     page they stay 320px (capped), so the WP frontend is unchanged. */
+  grid-template-columns: repeat(var(--cols, 3), minmax(0, 320px));
+  grid-auto-rows: auto;
+  justify-content: center;
+  gap: 0.75rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+  box-sizing: border-box;
+
+  /* spotlight radius — JS overrides this inline from the `radius` prop */
+  --r: 300px;
+}
+
+@media (max-width: 1124px) {
+  .chroma-grid {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 320px));
+    gap: 0.5rem;
+    padding: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .chroma-grid {
+    grid-template-columns: 320px;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+}
+
+.chroma-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  /* Fill the grid column (which caps at 320px but shrinks on narrow containers).
+     A fixed `width:320px` would overflow a shrunk column and lap over neighbours. */
+  width: 100%;
+  box-sizing: border-box;
+  height: auto;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid #333;
+  transition: border-color 0.3s ease;
+  /* Per-item background (solid/gradient) renders here, BEHIND the image, so
+     transparent PNGs show it through. Dark default so a card without a chosen
+     background still reads as a card on a light page (no page-coloured frame).
+     Two declarations: when --card-gradient is unset OR an empty string the
+     `var(...)` line is invalid/ignored and the solid #15151f base holds; a real
+     gradient/colour overrides it. (An empty-string var would defeat a single
+     `var(--card-gradient, #15151f)` fallback.) */
+  background: #15151f;
+  background: var(--card-gradient, #15151f);
+
+  --mouse-x: 50%;
+  --mouse-y: 50%;
+  --spotlight-color: rgba(255, 255, 255, 0.3);
+}
+
+.chroma-card:hover {
+  border-color: var(--card-border);
+}
+
+/* Per-card border glow that follows the cursor (already card-scoped). */
+.chroma-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), var(--spotlight-color), transparent 70%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: 2;
+}
+
+.chroma-card:hover::before {
+  opacity: 1;
+}
+
+.chroma-img-wrapper {
+  position: relative;
+  z-index: 1;
+  /* Deterministic image box so the card has a real height (= image + info).
+     Replaces `flex:1`, which let the image eat the row and clip the footer. */
+  aspect-ratio: 4 / 5;
+  padding: 10px;
+  box-sizing: border-box;
+  background: transparent;
+}
+
+.chroma-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 10px;
+  display: block;
+  /* Greyscale base — applied to the (opaque) image only, so it can NEVER
+     desaturate the page behind the grid (the old full-bleed backdrop-filter
+     overlay did exactly that → grey sheet on light backgrounds). */
+  filter: grayscale(1) brightness(0.82);
+  transition: filter 0.3s ease;
+}
+
+/* Colour reveal: the same image, unfiltered, painted ONLY inside the cursor
+   radius via a radial mask. Strictly inside the image box → no page sampling,
+   any background. `--img` is the (crop-composited) image URL set per card in JS;
+   `--cx/--cy` is the cursor relative to this image box; `--r` is the radius
+   (animated to 0 on pointer-leave so the greyscale fades back in). */
+.chroma-img-wrapper::after {
+  content: '';
+  position: absolute;
+  inset: 10px;
+  border-radius: 10px;
+  background-image: var(--img);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 1;
+  -webkit-mask-image: radial-gradient(
+    circle var(--r) at var(--cx, -9999px) var(--cy, -9999px),
+    #000 0%, #000 18%,
+    rgba(0, 0, 0, 0.85) 35%,
+    rgba(0, 0, 0, 0.6) 55%,
+    rgba(0, 0, 0, 0.32) 78%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    circle var(--r) at var(--cx, -9999px) var(--cy, -9999px),
+    #000 0%, #000 18%,
+    rgba(0, 0, 0, 0.85) 35%,
+    rgba(0, 0, 0, 0.6) 55%,
+    rgba(0, 0, 0, 0.32) 78%,
+    transparent 100%
+  );
+}
+
+.chroma-info {
+  position: relative;
+  z-index: 1;
+  padding: 0.75rem 1rem;
+  color: #fff;
+  font-family: system-ui, sans-serif;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  row-gap: 0.25rem;
+  column-gap: 0.75rem;
+}
+
+.chroma-info .role,
+.chroma-info .handle {
+  color: #aaa;
+}

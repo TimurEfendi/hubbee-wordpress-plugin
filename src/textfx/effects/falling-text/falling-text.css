@@ -1,0 +1,9 @@
+/*
+ * WP-only typography reset (see effects/shuffle/shuffle.css for rationale).
+ * FallingText.css hardcodes `font-weight: bold` on `.highlighted` words; on WP
+ * inherit the host element's weight. Scoped under `.bz-tx-layer` → preview
+ * unchanged. (font-size is not hardcoded, so it already inherits.)
+ */
+.bz-tx-layer .highlighted {
+  font-weight: inherit;
+}

@@ -1,0 +1,20 @@
+/*
+ * WP-only typography reset for the shuffle effect.
+ *
+ * On the WordPress frontend the effect must inherit the host element's
+ * font-family / size / case (the runtime mirrors them onto `.bz-tx-layer`),
+ * NOT the reactbits demo styling. Shuffle.css hardcodes a showcase look on
+ * `.shuffle-parent` (font-family: 'Press Start 2P'; font-size: 4rem;
+ * line-height: 1; text-transform: uppercase) which otherwise overrides it.
+ *
+ * Scoped under `.bz-tx-layer` so it (a) only applies on WP — the SaaS
+ * configurator preview has no layer wrapper and keeps the intended showcase
+ * look — and (b) outranks `.shuffle-parent` (0,2,0 > 0,1,0). Imported only by
+ * the chunk entry, so the preview never loads it. Vendor CSS stays untouched.
+ */
+.bz-tx-layer .shuffle-parent {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  text-transform: inherit;
+}

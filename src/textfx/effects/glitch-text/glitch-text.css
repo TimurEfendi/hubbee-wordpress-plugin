@@ -1,0 +1,30 @@
+/*
+ * WP-only typography + colour reset (see effects/shuffle/shuffle.css for the
+ * general rationale). GlitchText.css is built for a DARK demo page and hardcodes:
+ *   - `.glitch`            font-size: clamp(2rem,10vw,8rem); font-weight: 900; color: #fff
+ *   - `.glitch::before/after`  color: #fff; background-color: #120F17
+ * On a light WP page the #120F17 fill shows as a black bar behind the text and
+ * #fff ignores the element colour. Here we inherit the host element's typography
+ * AND colour (the runtime mirrors them onto `.bz-tx-layer`), and drop the fill so
+ * the glitch is a clean RGB-split overlay (red/cyan text-shadow slices) with no box.
+ * Scoped under `.bz-tx-layer` → WP only; the configurator preview keeps the
+ * dark-bg showcase. Vendor CSS stays untouched.
+ */
+.bz-tx-layer .glitch {
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+}
+.bz-tx-layer .glitch::after,
+.bz-tx-layer .glitch::before {
+  background-color: transparent;
+  color: inherit;
+}
+
+/* Multiline: the vendor forces white-space:nowrap (single-line demo), which
+   squeezes long sentences onto one overflowing line on WP. Follow the host
+   element's wrapping; the ::before/::after glitch layers share the same box
+   and wrap identically. */
+.bz-tx-layer .glitch {
+  white-space: inherit;
+}
