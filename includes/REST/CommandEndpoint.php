@@ -51,15 +51,15 @@ class CommandEndpoint extends RestEndpoint {
             $payload['command_id'] = $command_id;
         }
 
-        // Idempotency guard: if this exact command_id already executed
-        // successfully, do NOT run it again. A re-delivery — the dispatcher's
-        // network-error retry, a stale re-dispatch, or a lost result POST that
-        // left completed_at NULL — must not double-execute a destructive action
-        // (plugin/theme install/delete). Mirrors PushEndpoint's request_id
-        // dedupe; command_id is a UUID and fits the shared bz_processed_requests
-        // key. Only successful commands are marked (see below), so a genuinely
-        // failed command is still retryable.
-        if ( ! empty( $command_id ) && Database::is_request_processed( $command_id ) ) {
+        // Idempotency guard: atomically CLAIM this command_id at ENTRY (before
+        // execution). The UNIQUE(request_id) key makes a duplicate claim fail, so
+        // a re-delivery — the dispatcher's network-error retry, a stale
+        // re-dispatch, a lost result POST — OR a concurrent re-dispatch that
+        // arrives while the first execution is still running server-side (the
+        // >180s update case) loses the claim and becomes an idempotent no-op
+        // instead of a SECOND concurrent Upgrader on the same item (B-SUS-1). A
+        // failed command releases the claim below, so it stays retryable.
+        if ( ! empty( $command_id ) && ! Database::claim_request( $command_id ) ) {
             return new WP_REST_Response(
                 [
                     'success'      => true,
@@ -74,7 +74,7 @@ class CommandEndpoint extends RestEndpoint {
 
         // Log the incoming command
         if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-            error_log( sprintf(
+            hubbee_debug_log( sprintf(
                 '[Hubbee CommandEndpoint] Received direct push: type=%s, id=%s',
                 $command_type,
                 $command_id ?: 'none'
@@ -86,8 +86,14 @@ class CommandEndpoint extends RestEndpoint {
         $result   = $executor->execute( $command_type, $payload );
 
         if ( is_wp_error( $result ) ) {
+            // Release the claim so a genuinely-failed command stays retryable
+            // (the claim was taken at entry, before we knew the outcome).
+            if ( ! empty( $command_id ) ) {
+                Database::release_request( $command_id );
+            }
+
             // Log error
-            error_log( sprintf(
+            hubbee_debug_log( sprintf(
                 '[Hubbee CommandEndpoint ERROR] Command failed: type=%s, error=%s',
                 $command_type,
                 $result->get_error_message()
@@ -107,18 +113,16 @@ class CommandEndpoint extends RestEndpoint {
 
         // Log success
         if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-            error_log( sprintf(
+            hubbee_debug_log( sprintf(
                 '[Hubbee CommandEndpoint] Command executed successfully: type=%s, id=%s',
                 $command_type,
                 $command_id ?: 'none'
             ) );
         }
 
-        // Mark this command_id processed so a re-delivery becomes the idempotent
-        // no-op above. Only reached on success — failed commands stay retryable.
-        if ( ! empty( $command_id ) ) {
-            Database::mark_request_processed( $command_id );
-        }
+        // Success: the entry claim already marks this command_id processed, so a
+        // re-delivery becomes the idempotent no-op above. (No second insert here —
+        // the claim at entry is the marker; failed commands released it above.)
 
         // Full list push for reconciliation (push path)
         $this->push_resource_list_if_needed( $command_type );

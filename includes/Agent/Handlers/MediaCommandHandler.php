@@ -53,17 +53,18 @@ class MediaCommandHandler implements CommandHandler {
         // Path A: URL-based upload via media_sideload_image.
         if ( ! empty( $payload['url'] ) ) {
             $url = esc_url_raw( $payload['url'] );
-            error_log( '[Hubbee] Uploading media from URL: ' . $url );
+            hubbee_debug_log( '[Hubbee] Uploading media from URL: ' . $url );
             $attachment_id = media_sideload_image( $url, $post_id, $title, 'id' );
 
             if ( is_wp_error( $attachment_id ) ) {
-                error_log( '[Hubbee] media_sideload_image failed: ' . $attachment_id->get_error_message() );
+                hubbee_debug_log( '[Hubbee] media_sideload_image failed: ' . $attachment_id->get_error_message() );
                 return new WP_Error(
                     'bz_media_sideload_failed',
+                    /* translators: %s: error message */
                     sprintf( __( 'Media upload from URL failed: %s', 'hubbee' ), $attachment_id->get_error_message() )
                 );
             }
-            error_log( '[Hubbee] Media uploaded from URL successfully: attachment_id=' . $attachment_id );
+            hubbee_debug_log( '[Hubbee] Media uploaded from URL successfully: attachment_id=' . $attachment_id );
         }
         // Path B: base64 inline data (capped at 10 MB).
         elseif ( ! empty( $payload['data'] ) && ! empty( $payload['filename'] ) ) {
@@ -75,32 +76,33 @@ class MediaCommandHandler implements CommandHandler {
                 $base64_data = explode( 'base64,', $base64_data )[1];
             }
 
+            // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode -- decoding a base64-encoded media file payload from the authenticated push (binary data, not code). Strict mode returns false on invalid input, checked below.
             $decoded = base64_decode( $base64_data, true );
             if ( false === $decoded ) {
-                error_log( '[Hubbee] Base64 decode failed for media upload: ' . $filename );
+                hubbee_debug_log( '[Hubbee] Base64 decode failed for media upload: ' . $filename );
                 return new WP_Error( 'bz_invalid_base64', __( 'Invalid Base64 data.', 'hubbee' ) );
             }
 
             $file_size = strlen( $decoded );
             if ( $file_size > 10 * 1024 * 1024 ) {
-                error_log( '[Hubbee] Media upload file too large: ' . $file_size . ' bytes' );
+                hubbee_debug_log( '[Hubbee] Media upload file too large: ' . $file_size . ' bytes' );
                 return new WP_Error( 'bz_file_too_large', __( 'File is too large (max. 10MB for Base64).', 'hubbee' ) );
             }
 
-            error_log( '[Hubbee] Uploading media: ' . $filename . ' (' . $file_size . ' bytes)' );
+            hubbee_debug_log( '[Hubbee] Uploading media: ' . $filename . ' (' . $file_size . ' bytes)' );
 
             $upload = wp_upload_bits( $filename, null, $decoded );
 
             if ( ! is_array( $upload ) ) {
-                error_log( '[Hubbee] wp_upload_bits returned non-array for: ' . $filename );
+                hubbee_debug_log( '[Hubbee] wp_upload_bits returned non-array for: ' . $filename );
                 return new WP_Error( 'bz_upload_failed', __( 'Upload failed (invalid response).', 'hubbee' ) );
             }
             if ( ! empty( $upload['error'] ) ) {
-                error_log( '[Hubbee] wp_upload_bits error: ' . $upload['error'] );
+                hubbee_debug_log( '[Hubbee] wp_upload_bits error: ' . $upload['error'] );
                 return new WP_Error( 'bz_upload_failed', $upload['error'] );
             }
             if ( empty( $upload['file'] ) ) {
-                error_log( '[Hubbee] wp_upload_bits returned no file path' );
+                hubbee_debug_log( '[Hubbee] wp_upload_bits returned no file path' );
                 return new WP_Error( 'bz_upload_failed', __( 'Upload failed (no file path).', 'hubbee' ) );
             }
 
@@ -119,7 +121,7 @@ class MediaCommandHandler implements CommandHandler {
 
             $attachment_id = wp_insert_attachment( $attachment_data, $upload['file'], $post_id );
             if ( is_wp_error( $attachment_id ) ) {
-                @unlink( $upload['file'] );
+                wp_delete_file( $upload['file'] );
                 return $attachment_id;
             }
 

@@ -59,6 +59,9 @@
                 return;
             }
 
+            // Visitor-analytics consent, recorded at the moment of connecting.
+            var analyticsConsent = $('#bz-analytics-consent').is(':checked') ? '1' : '0';
+
             var $btn = $(this);
             var $spinner = $('#bz-connect-spinner');
 
@@ -73,7 +76,8 @@
                 data: {
                     action: 'bz_enroll',
                     nonce: bzAdmin.nonce,
-                    onboarding_token: token
+                    onboarding_token: token,
+                    analytics_consent: analyticsConsent
                 },
                 success: function(response) {
                     if (response.success) {

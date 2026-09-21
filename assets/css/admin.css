@@ -242,6 +242,34 @@
     outline: none;
 }
 
+/* Visitor-analytics consent, shown above the connect button. Boxed rather than
+   inline so the choice reads as a decision, not as fine print. */
+.bz-consent {
+    margin: 0 0 var(--bz-space-3);
+    padding: var(--bz-space-3);
+    border: 1px solid var(--bz-border);
+    border-radius: var(--bz-radius-sm);
+    background: var(--bz-card);
+}
+
+.bz-consent label {
+    display: flex;
+    align-items: center;
+    gap: var(--bz-space-2);
+    color: var(--bz-fg);
+    cursor: pointer;
+}
+
+.bz-consent .description {
+    margin: var(--bz-space-2) 0 0;
+    color: var(--bz-muted);
+}
+
+.bz-consent input[type="checkbox"]:focus-visible {
+    outline: 2px solid var(--bz-primary);
+    outline-offset: 2px;
+}
+
 /* ==========================================================================
    Connected Info
    ========================================================================== */

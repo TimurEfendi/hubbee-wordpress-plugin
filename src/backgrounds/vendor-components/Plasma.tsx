@@ -75,7 +75,9 @@ export const Plasma = (props: PlasmaProps) => {
     const mesh = new Mesh(gl, { geometry, program });
     const handleMouseMove = (e: MouseEvent) => {
       if (!propsRef.current.mouseInteractive) return;
-      const rect = containerRef.current!.getBoundingClientRect();
+      const container = containerRef.current;
+      if (!container) return;
+      const rect = container.getBoundingClientRect();
       mousePos.current.x = e.clientX - rect.left; mousePos.current.y = e.clientY - rect.top;
       const mu = program.uniforms.uMouse.value; mu[0] = mousePos.current.x; mu[1] = mousePos.current.y;
     };
@@ -84,7 +86,9 @@ export const Plasma = (props: PlasmaProps) => {
     canvas.addEventListener('webglcontextlost', onContextLost);
 
     const setSize = () => {
-      const rect = containerRef.current!.getBoundingClientRect();
+      const container = containerRef.current;
+      if (!container) return;
+      const rect = container.getBoundingClientRect();
       const w = Math.max(1, Math.floor(rect.width)); const h = Math.max(1, Math.floor(rect.height));
       renderer.setSize(w, h);
       const res = program.uniforms.iResolution.value; res[0] = gl.drawingBufferWidth; res[1] = gl.drawingBufferHeight;

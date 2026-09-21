@@ -429,7 +429,8 @@ class TokenRepository {
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
         $deleted = $wpdb->query(
             $wpdb->prepare(
-                "DELETE FROM {$table} WHERE token_key LIKE 'ext\\_%' AND token_key NOT IN ({$placeholders})",
+                "DELETE FROM {$table} WHERE token_key LIKE %s AND token_key NOT IN ({$placeholders})",
+                $wpdb->esc_like( 'ext_' ) . '%',
                 ...$expected_keys
             )
         );
@@ -487,7 +488,8 @@ class TokenRepository {
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
         $deleted = $wpdb->query(
             $wpdb->prepare(
-                "DELETE FROM {$table} WHERE token_key NOT LIKE 'ext\\_%' AND token_key NOT IN ({$placeholders})",
+                "DELETE FROM {$table} WHERE token_key NOT LIKE %s AND token_key NOT IN ({$placeholders})",
+                $wpdb->esc_like( 'ext_' ) . '%',
                 ...$expected_keys
             )
         );

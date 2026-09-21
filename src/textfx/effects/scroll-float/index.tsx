@@ -1,12 +1,14 @@
 import React from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import ScrollFloat from '../../vendor-components/ScrollFloat';
+import { normalizeFxText } from '../../_shared/normalize-text';
 import type { TextContext } from '../../_runtime/types';
 // WP-only typography reset (chunk-only → preview keeps showcase).
 import './scroll-float.css';
 
 (window as any).__bz_tx_register('scroll-float', (container: HTMLElement, textCtx: TextContext, config: Record<string, unknown>) => {
   const root: Root = createRoot(container);
+  const text = normalizeFxText(textCtx.text);
 
   const render = (text: string, props: Record<string, unknown>) => {
     // Wrap the scrub range in ScrollTrigger's clamp() so it stays inside the
@@ -24,10 +26,10 @@ import './scroll-float.css';
     } as never, text));
   };
 
-  render(textCtx.text, config);
+  render(text, config);
 
   return {
-    update: (newConfig: Record<string, unknown>) => render(textCtx.text, newConfig),
+    update: (newConfig: Record<string, unknown>) => render(text, newConfig),
     unmount: () => root.unmount(),
   };
 });

@@ -147,7 +147,7 @@ class JwtGenerator {
      * @return string Base64URL encoded string.
      */
     private function base64url_encode( string $data ): string {
-        return rtrim( strtr( base64_encode( $data ), '+/', '-_' ), '=' );
+        return rtrim( strtr( base64_encode( $data ), '+/', '-_' ), '=' ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- base64url encoding for JWT, not obfuscation.
     }
 
     /**

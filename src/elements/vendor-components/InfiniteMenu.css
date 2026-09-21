@@ -32,7 +32,11 @@
   user-select: none;
   position: absolute;
   font-weight: 900;
-  font-size: 3rem;
+  /* Item typography vars set by the SaaS wrapper (design.itemFont/
+     itemFontSize/itemColor); fallbacks preserve the original look. */
+  font-family: var(--im-item-font, inherit);
+  font-size: var(--im-item-size, 3rem);
+  color: var(--im-item-color, inherit);
   left: 1.6em;
   top: 50%;
 }
@@ -68,7 +72,11 @@
   position: absolute;
   max-width: 10ch;
   top: 50%;
-  font-size: 1.2rem;
+  /* Scales at 0.4× the title size — with the 3rem fallback this is the
+     original 1.2rem. */
+  font-family: var(--im-item-font, inherit);
+  font-size: calc(var(--im-item-size, 3rem) * 0.4);
+  color: var(--im-item-color, inherit);
   right: 1%;
   transform: translate(0, -50%);
 }

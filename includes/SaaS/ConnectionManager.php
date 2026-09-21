@@ -62,9 +62,19 @@ class ConnectionManager {
             return false;
         }
 
-        // Copy detection: warn but do NOT auto-reset credentials
+        // Clone / restore detection (F-15). needs_reset() is true when this
+        // install is a copy (domain fingerprint changed) or a restore into a
+        // different environment (the secret no longer decrypts under the new WP
+        // salts). Either way this install must NOT keep authenticating and
+        // heartbeating as the original Hubbee site — that is a split-brain where
+        // two WordPress installs share one site_id + secret. Clear the inherited
+        // credentials (auto_reset) so this install re-enrolls as its own site,
+        // and report disconnected. This also makes a decryptable secret a hard
+        // requirement for "connected" (needs_reset checks decryption).
         if ( $this->needs_reset() ) {
-            error_log( '[Hubbee] needs_reset() triggered — credentials intact, skipping auto_reset. Site ID: ' . $site_id );
+            hubbee_debug_log( '[Hubbee] Copied/restored installation detected — clearing inherited credentials (auto_reset). Site ID: ' . $site_id );
+            $this->auto_reset();
+            return false;
         }
 
         return true;
@@ -313,7 +323,7 @@ class ConnectionManager {
         );
 
         if ( is_wp_error( $response ) ) {
-            error_log( '[Hubbee] notify_saas_disconnect failed: ' . $response->get_error_message() );
+            hubbee_debug_log( '[Hubbee] notify_saas_disconnect failed: ' . $response->get_error_message() );
         }
     }
 
@@ -343,7 +353,7 @@ class ConnectionManager {
                 return $this->simple_encrypt( $data, $key );
             }
 
-            return base64_encode( $iv . $encrypted );
+            return base64_encode( $iv . $encrypted ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- encoding encrypted binary (IV + ciphertext), not obfuscation.
         }
 
         // Fallback for systems without OpenSSL
@@ -365,6 +375,7 @@ class ConnectionManager {
 
         // Try OpenSSL decryption first
         if ( function_exists( 'openssl_decrypt' ) ) {
+            // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode -- unwrapping the base64-encoded AES ciphertext this plugin itself wrote in encrypt(), not obfuscated code.
             $decoded = base64_decode( $data );
 
             if ( false === $decoded ) {
@@ -408,7 +419,7 @@ class ConnectionManager {
             $result .= $data[ $i ] ^ $key[ $i % $key_length ];
         }
 
-        return base64_encode( 'simple:' . $result );
+        return base64_encode( 'simple:' . $result ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- encoding an encrypted fallback payload, not obfuscation.
     }
 
     /**
@@ -419,6 +430,7 @@ class ConnectionManager {
      * @return string
      */
     private function simple_decrypt( string $data, string $key ): string {
+        // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode -- unwrapping the base64-encoded ciphertext from the XOR fallback (simple_encrypt), not obfuscated code.
         $decoded = base64_decode( $data );
 
         if ( false === $decoded || strpos( $decoded, 'simple:' ) !== 0 ) {

@@ -176,7 +176,7 @@ class DebugLogEndpoint extends RestEndpoint {
             $info['size_formatted'] = size_format( $file_size );
             $info['modified_at'] = wp_date( 'Y-m-d H:i:s', $modified_time );
             $info['line_count'] = $line_count;
-            $info['writable'] = is_writable( $log_path );
+            $info['writable'] = is_writable( $log_path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_is_writable -- admin-only debug.log utility operating on the site's own log; WP_Filesystem is not initialised in this REST context.
         }
 
         return new WP_REST_Response( $info, 200 );
@@ -201,7 +201,7 @@ class DebugLogEndpoint extends RestEndpoint {
             );
         }
 
-        if ( ! is_writable( $log_path ) ) {
+        if ( ! is_writable( $log_path ) ) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_is_writable -- admin-only debug.log utility operating on the site's own log; WP_Filesystem is not initialised in this REST context.
             return new WP_Error(
                 'not_writable',
                 'Debug log file is not writable.',
@@ -213,7 +213,7 @@ class DebugLogEndpoint extends RestEndpoint {
         $previous_size = filesize( $log_path );
 
         // Clear the file
-        $result = file_put_contents( $log_path, '' );
+        $result = file_put_contents( $log_path, '' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- admin-only debug.log utility operating on the site's own log; WP_Filesystem is not initialised in this REST context.
 
         if ( $result === false ) {
             return new WP_Error(
@@ -474,9 +474,9 @@ class DebugLogEndpoint extends RestEndpoint {
 
         // For large files, estimate
         $sample_size = 10240; // 10KB sample
-        $handle = fopen( $path, 'r' );
-        $sample = fread( $handle, $sample_size );
-        fclose( $handle );
+        $handle = fopen( $path, 'r' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- admin-only debug.log utility operating on the site's own log; WP_Filesystem is not initialised in this REST context.
+        $sample = fread( $handle, $sample_size ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread -- admin-only debug.log utility operating on the site's own log; WP_Filesystem is not initialised in this REST context.
+        fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- admin-only debug.log utility operating on the site's own log; WP_Filesystem is not initialised in this REST context.
 
         $lines_in_sample = substr_count( $sample, "\n" );
         $bytes_per_line = $sample_size / max( 1, $lines_in_sample );

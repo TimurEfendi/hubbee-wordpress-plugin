@@ -223,7 +223,7 @@ class AnalyticsEndpoint extends RestEndpoint {
 
         foreach ( $headers as $header ) {
             if ( ! empty( $_SERVER[ $header ] ) ) {
-                $ip = $_SERVER[ $header ];
+                $ip = sanitize_text_field( wp_unslash( $_SERVER[ $header ] ) );
 
                 // X-Forwarded-For can contain multiple IPs, take the first
                 if ( strpos( $ip, ',' ) !== false ) {

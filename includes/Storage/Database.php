@@ -216,9 +216,12 @@ class Database {
     public static function drop_tables(): void {
         global $wpdb;
 
+        // Table names come from the plugin's own trusted accessors (no user input);
+        // identifiers can't be passed through $wpdb->prepare().
         // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
         // phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
         // phpcs:disable WordPress.DB.DirectDatabaseQuery.SchemaChange
+        // phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
         $wpdb->query( 'DROP TABLE IF EXISTS ' . self::get_tokens_table() );
         $wpdb->query( 'DROP TABLE IF EXISTS ' . self::get_requests_table() );
         $wpdb->query( 'DROP TABLE IF EXISTS ' . self::get_components_table() );
@@ -302,5 +305,57 @@ class Database {
         );
 
         return false !== $result;
+    }
+
+    /**
+     * Atomically CLAIM a request ID at entry (before execution).
+     *
+     * The UNIQUE(request_id) key makes a concurrent or duplicate INSERT fail, so
+     * exactly one caller wins the claim. Unlike marking on success, claiming at
+     * entry closes the CONCURRENT re-dispatch window (B-SUS-1): a retry that
+     * arrives while the first execution is still running server-side (the >180s
+     * case) loses the claim and must NOT start a second Upgrader on the same item.
+     * Release with release_request() on failure so a genuinely-failed command
+     * stays retryable.
+     *
+     * @param string $request_id The request ID to claim.
+     * @return bool True if this caller claimed it, false if already claimed/processed.
+     */
+    public static function claim_request( string $request_id ): bool {
+        global $wpdb;
+
+        $table = self::get_requests_table();
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+        $result = $wpdb->insert(
+            $table,
+            [
+                'request_id'    => $request_id,
+                'processed_at'  => current_time( 'mysql' ),
+                'tokens_count'  => 0,
+            ],
+            [ '%s', '%s', '%d' ]
+        );
+
+        return false !== $result;
+    }
+
+    /**
+     * Release a claimed request ID so it can be retried.
+     *
+     * Called when execution failed after a claim_request() — the command did not
+     * complete, so the idempotency marker must be removed or the retry would be
+     * swallowed as an idempotent no-op.
+     *
+     * @param string $request_id The request ID to release.
+     * @return void
+     */
+    public static function release_request( string $request_id ): void {
+        global $wpdb;
+
+        $table = self::get_requests_table();
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+        $wpdb->delete( $table, [ 'request_id' => $request_id ], [ '%s' ] );
     }
 }

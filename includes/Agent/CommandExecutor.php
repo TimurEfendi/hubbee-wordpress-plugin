@@ -128,7 +128,8 @@ class CommandExecutor {
             if ( ! in_array( $type, $allowed_types, true ) ) {
                 return new WP_Error(
                     'bz_batch_invalid_type',
-                    sprintf( __( 'Invalid batch command type at index %d: %s', 'hubbee' ), $index, $type )
+                    /* translators: 1: command index, 2: command type */
+                    sprintf( __( 'Invalid batch command type at index %1$d: %2$s', 'hubbee' ), $index, $type )
                 );
             }
         }

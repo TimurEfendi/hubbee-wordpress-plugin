@@ -1,6 +1,7 @@
 import React from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import CircularText from '../../vendor-components/CircularText';
+import { normalizeFxText } from '../../_shared/normalize-text';
 import type { TextContext } from '../../_runtime/types';
 
 (window as any).__bz_tx_register('circular-text', (container: HTMLElement, textCtx: TextContext, config: Record<string, unknown>) => {
@@ -13,15 +14,16 @@ import type { TextContext } from '../../_runtime/types';
   const diameterFor = (fontSize: number) => Math.max(160, Math.round(fontSize * 6));
   const diameter = diameterFor(textCtx.fontSize);
   container.style.minHeight = `${diameter}px`;
+  const text = normalizeFxText(textCtx.text);
   const render = (text: string, props: Record<string, unknown>) => {
     root.render(React.createElement(CircularText, { text, diameter, ...props }));
   };
-  render(textCtx.text, config);
+  render(text, config);
   return {
     update: (newConfig: Record<string, unknown>) => {
       const d = diameterFor((newConfig.fontSize as number) || textCtx.fontSize);
       container.style.minHeight = `${d}px`;
-      render(textCtx.text, { ...newConfig, diameter: d });
+      render(text, { ...newConfig, diameter: d });
     },
     unmount: () => root.unmount(),
   };

@@ -221,7 +221,7 @@ class ElementorManager {
             $stem    = basename( $file, '.min.js' );
             $sidecar = $file . '.sha256';
             if ( file_exists( $sidecar ) ) {
-                $hash = trim( (string) file_get_contents( $sidecar ) );
+                $hash = trim( (string) file_get_contents( $sidecar ) ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- reading a local file, not a remote URL.
                 $map[ $stem ] = substr( str_replace( 'sha256:', '', $hash ), 0, 16 );
             } else {
                 $map[ $stem ] = (string) filemtime( $file );

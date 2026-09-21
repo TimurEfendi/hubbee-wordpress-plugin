@@ -37,7 +37,7 @@ class ExternalImageTag extends Data_Tag {
      * @return string
      */
     public function get_title(): string {
-        return __( 'Ext. Bild', 'hubbee' );
+        return __( 'Ext. Image', 'hubbee' );
     }
 
     /**

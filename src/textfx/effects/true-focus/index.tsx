@@ -1,10 +1,12 @@
 import React from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import TrueFocus from './TrueFocusAdapted';
+import { normalizeFxText } from '../../_shared/normalize-text';
 import type { TextContext } from '../../_runtime/types';
 
 (window as any).__bz_tx_register('true-focus', (container: HTMLElement, textCtx: TextContext, config: Record<string, unknown>) => {
   const root: Root = createRoot(container);
+  const text = normalizeFxText(textCtx.text);
 
   const render = (text: string, props: Record<string, unknown>) => {
     // The vendor's .focus-container is a flex row hardcoded to
@@ -17,10 +19,10 @@ import type { TextContext } from '../../_runtime/types';
     root.render(React.createElement(TrueFocus, { sentence: text, ...props }));
   };
 
-  render(textCtx.text, config);
+  render(text, config);
 
   return {
-    update: (newConfig: Record<string, unknown>) => render(textCtx.text, newConfig),
+    update: (newConfig: Record<string, unknown>) => render(text, newConfig),
     unmount: () => root.unmount(),
   };
 });

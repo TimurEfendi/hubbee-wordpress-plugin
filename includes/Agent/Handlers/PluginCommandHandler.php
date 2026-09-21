@@ -73,13 +73,14 @@ class PluginCommandHandler implements CommandHandler {
 
         $all_plugins = get_plugins();
         if ( ! isset( $all_plugins[ $plugin ] ) ) {
-            error_log( sprintf(
+            hubbee_debug_log( sprintf(
                 '[Hubbee] Plugin not found: "%s". Available: %s',
                 $plugin,
                 implode( ', ', array_keys( $all_plugins ) )
             ) );
             return new WP_Error(
                 'bz_plugin_not_found',
+                /* translators: %s: plugin file path */
                 sprintf( __( 'Plugin not found: %s', 'hubbee' ), $plugin )
             );
         }
@@ -132,6 +133,7 @@ class PluginCommandHandler implements CommandHandler {
         if ( ! isset( $all_plugins[ $plugin_file ] ) ) {
             return new WP_Error(
                 'bz_plugin_not_found',
+                /* translators: %s: plugin file path */
                 sprintf( __( 'Plugin not found: %s', 'hubbee' ), $plugin_file )
             );
         }
@@ -210,6 +212,7 @@ class PluginCommandHandler implements CommandHandler {
         if ( is_wp_error( $api ) ) {
             return new WP_Error(
                 'bz_plugin_api_error',
+                /* translators: %s: plugin slug */
                 sprintf( __( 'Plugin "%s" not found on WordPress.org.', 'hubbee' ), $slug )
             );
         }
@@ -283,6 +286,7 @@ class PluginCommandHandler implements CommandHandler {
         if ( ! $plugin_file ) {
             return new WP_Error(
                 'bz_plugin_not_found',
+                /* translators: %s: plugin slug */
                 sprintf( __( 'Plugin not found: %s', 'hubbee' ), $slug )
             );
         }
@@ -319,6 +323,7 @@ class PluginCommandHandler implements CommandHandler {
         if ( false === $result ) {
             return new WP_Error(
                 'bz_plugin_update_failed',
+                /* translators: %s: plugin name */
                 sprintf( __( 'Plugin update failed: %s', 'hubbee' ), $plugin_name )
             );
         }
@@ -361,6 +366,7 @@ class PluginCommandHandler implements CommandHandler {
         if ( ! isset( $all_plugins[ $plugin_file ] ) ) {
             return new WP_Error(
                 'bz_plugin_not_found',
+                /* translators: %s: plugin file path */
                 sprintf( __( 'Plugin not found: %s', 'hubbee' ), $plugin_file )
             );
         }
@@ -392,6 +398,7 @@ class PluginCommandHandler implements CommandHandler {
         if ( is_wp_error( $deleted ) ) {
             return new WP_Error(
                 'bz_plugin_delete_failed',
+                /* translators: %s: error message */
                 sprintf( __( 'Plugin deletion failed: %s', 'hubbee' ), $deleted->get_error_message() )
             );
         }

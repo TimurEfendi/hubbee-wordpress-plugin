@@ -4,7 +4,13 @@ export interface EffectInstance {
 }
 
 export interface TextContext {
-  /** Plain text content extracted from the target element */
+  /**
+   * RAW `textContent` of the target element — includes Elementor HTML source
+   * formatting (newlines/tab indentation around the text node). Chunks must
+   * normalize via `_shared/normalize-text` before passing it to whitespace-
+   * sensitive vendor components; rotating-text relies on the raw newlines
+   * for its `splitBy: 'lines'` mode, so the runtime never normalizes here.
+   */
   text: string;
   /** Raw innerHTML for effects that need rich formatting */
   html: string;

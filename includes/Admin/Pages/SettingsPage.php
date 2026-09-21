@@ -108,7 +108,21 @@ class SettingsPage {
                             <div class="bz-step-number">3</div>
                             <div class="bz-step-content">
                                 <h3><?php esc_html_e( 'Connect', 'hubbee' ); ?></h3>
-                                <p><?php esc_html_e( 'Click the button to establish the connection.', 'hubbee' ); ?></p>
+                                <p><?php esc_html_e( 'Choose whether this site should report visitor analytics, then establish the connection.', 'hubbee' ); ?></p>
+
+                                <div class="bz-consent">
+                                    <label for="bz-analytics-consent">
+                                        <input type="checkbox" id="bz-analytics-consent" checked>
+                                        <strong><?php esc_html_e( 'Send visitor analytics to Hubbee', 'hubbee' ); ?></strong>
+                                    </label>
+                                    <p class="description">
+                                        <?php esc_html_e( 'Loads a small, cookieless script on your public pages and reports page path, a random per-session hash, referrer domain and user agent. No cookies, no cross-site tracking, no personal profiles. Leave this unchecked and Hubbee never loads the script; you can change it at any time in your Hubbee dashboard under workspace settings.', 'hubbee' ); ?>
+                                    </p>
+                                    <p class="description">
+                                        <?php esc_html_e( 'If you enable this, disclose the analytics in your own privacy policy — you remain the controller for your visitors\' data.', 'hubbee' ); ?>
+                                    </p>
+                                </div>
+
                                 <button type="button" class="button button-primary button-hero" id="bz-connect-btn">
                                     <?php esc_html_e( 'Establish connection', 'hubbee' ); ?>
                                 </button>
@@ -141,6 +155,24 @@ class SettingsPage {
                         <tr>
                             <th><?php esc_html_e( 'Connected since', 'hubbee' ); ?></th>
                             <td><?php echo esc_html( $status['enrolled_at'] ); ?></td>
+                        </tr>
+                        <tr>
+                            <th><?php esc_html_e( 'Visitor analytics', 'hubbee' ); ?></th>
+                            <td>
+                                <?php
+                                // Mirror Tracker::enqueue_tracking_script() exactly —
+                                // same default (unset means on) AND the same filter,
+                                // so a site that forces analytics off in code sees
+                                // "Off" here instead of a contradicting "On". This is
+                                // the screen an owner or a reviewer checks to find out
+                                // what the site really does.
+                                $analytics_on = (bool) get_option( 'bz_analytics_enabled', true );
+                                $analytics_on = (bool) apply_filters( 'hubbee_analytics_enabled', $analytics_on );
+                                echo $analytics_on
+                                    ? esc_html__( 'On — switch it off in your Hubbee dashboard under workspace settings.', 'hubbee' )
+                                    : esc_html__( 'Off — no tracking script is loaded on this site.', 'hubbee' );
+                                ?>
+                            </td>
                         </tr>
                     </table>
                 </div>

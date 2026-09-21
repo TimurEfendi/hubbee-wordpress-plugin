@@ -135,12 +135,16 @@ export function loadGoogleFont(fontValue: string | undefined): Promise<void> {
       document.head.appendChild(link)
     }
 
-    // 2. Wait for browser to make the font usable
-    const familyName = entry.label
-    const weights = entry.weights ?? [400, 700]
-    await Promise.all(
-      weights.map(w => document.fonts.load(`${w} 16px "${familyName}"`))
-    )
+    // 2. Wait for browser to make the font usable. FontFaceSet is missing in
+    //    some embedded/legacy engines (and JSDOM) — the <link> above still
+    //    applies the font there, we just can't await readiness.
+    if (typeof document.fonts?.load === 'function') {
+      const familyName = entry.label
+      const weights = entry.weights ?? [400, 700]
+      await Promise.all(
+        weights.map(w => document.fonts.load(`${w} 16px "${familyName}"`))
+      )
+    }
 
     loaded.add(normalised)
   })()

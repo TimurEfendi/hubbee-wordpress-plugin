@@ -41,6 +41,12 @@ registerElementChunk('border-glow', (container, rawConfig) => {
           body: props.body as string | undefined,
           image: props.image as string | undefined,
           imageAsBackground: props.imageAsBackground as boolean | undefined,
+          // Crop legs — BorderGlow bakes them onto the image via
+          // useCroppedImages; omitting them shipped the uncropped original.
+          focalX: props.focalX as number | undefined,
+          focalY: props.focalY as number | undefined,
+          cropZoom: props.cropZoom as number | undefined,
+          rotation: props.rotation as number | undefined,
           headlineFont: props.headlineFont as string | undefined,
           headlineFontSize: props.headlineFontSize as number | undefined,
           headlineColor: props.headlineColor as string | undefined,

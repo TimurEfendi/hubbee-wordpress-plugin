@@ -380,7 +380,7 @@ class ContentEndpoint extends RestEndpoint {
             ], 400 );
         }
 
-        $total = wp_count_terms( 'category', [ 'hide_empty' => $body['hide_empty'] ?? false ] );
+        $total = wp_count_terms( [ 'taxonomy' => 'category', 'hide_empty' => $body['hide_empty'] ?? false ] );
 
         $result = array_map( function( $term ) {
             return [
@@ -433,7 +433,7 @@ class ContentEndpoint extends RestEndpoint {
             ], 400 );
         }
 
-        $total = wp_count_terms( 'post_tag', [ 'hide_empty' => $body['hide_empty'] ?? false ] );
+        $total = wp_count_terms( [ 'taxonomy' => 'post_tag', 'hide_empty' => $body['hide_empty'] ?? false ] );
 
         $result = array_map( function( $term ) {
             return [
@@ -849,7 +849,7 @@ class ContentEndpoint extends RestEndpoint {
             ];
         }
 
-        $total = wp_count_terms( 'category', [ 'hide_empty' => $params['hide_empty'] ?? false ] );
+        $total = wp_count_terms( [ 'taxonomy' => 'category', 'hide_empty' => $params['hide_empty'] ?? false ] );
 
         $result = array_map( function( $term ) {
             return [
@@ -900,7 +900,7 @@ class ContentEndpoint extends RestEndpoint {
             ];
         }
 
-        $total = wp_count_terms( 'post_tag', [ 'hide_empty' => $params['hide_empty'] ?? false ] );
+        $total = wp_count_terms( [ 'taxonomy' => 'post_tag', 'hide_empty' => $params['hide_empty'] ?? false ] );
 
         $result = array_map( function( $term ) {
             return [

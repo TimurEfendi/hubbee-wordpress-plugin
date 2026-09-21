@@ -82,7 +82,7 @@ class ChunkManager {
 
         if ( $bytes > self::CONFIG_MAX_BYTES ) {
             // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-            error_log(
+            hubbee_debug_log(
                 sprintf(
                     '[Hubbee][ChunkManager] Config rejected for %s: %d bytes exceeds hard cap of %d bytes.',
                     $label,
@@ -105,7 +105,7 @@ class ChunkManager {
 
         if ( $bytes > self::CONFIG_WARN_BYTES ) {
             // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-            error_log(
+            hubbee_debug_log(
                 sprintf(
                     '[Hubbee][ChunkManager] Large config for %s: %d bytes (warn threshold %d bytes).',
                     $label,

@@ -226,7 +226,7 @@ class SettingsEndpoint extends RestEndpoint {
 
         // Get sidebars (widget areas)
         $sidebars = [];
-        $sidebars_widgets = wp_get_sidebars_widgets();
+        $sidebars_widgets = get_option( 'sidebars_widgets', array() );
 
         foreach ( $wp_registered_sidebars as $sidebar_id => $sidebar ) {
             $widgets_in_sidebar = $sidebars_widgets[ $sidebar_id ] ?? [];
@@ -464,7 +464,7 @@ class SettingsEndpoint extends RestEndpoint {
 
         // Get sidebars (widget areas)
         $sidebars = [];
-        $sidebars_widgets = wp_get_sidebars_widgets();
+        $sidebars_widgets = get_option( 'sidebars_widgets', array() );
 
         foreach ( $wp_registered_sidebars as $sidebar_id => $sidebar ) {
             $widgets_in_sidebar = $sidebars_widgets[ $sidebar_id ] ?? [];
@@ -535,6 +535,16 @@ class SettingsEndpoint extends RestEndpoint {
             'start_of_week'   => get_option( 'start_of_week' ),
             'language'        => get_locale(),
             'site_language'   => get_option( 'WPLANG' ),
+            // Hubbee visitor analytics — chosen by the owner on the connect
+            // screen, later toggled from the dashboard via analytics.set_enabled.
+            // The default MUST match Tracker::enqueue_tracking_script(), which
+            // treats an unset option as on (2.0.9+). Reporting false here made
+            // the dashboard claim analytics was off on every site connected
+            // before 2.2.0, while the tracker was in fact running.
+            'analytics_enabled' => (bool) apply_filters(
+                'hubbee_analytics_enabled',
+                (bool) get_option( 'bz_analytics_enabled', true )
+            ),
         ];
     }
 
@@ -632,7 +642,8 @@ class SettingsEndpoint extends RestEndpoint {
 
         // Try to get certificate info if available
         if ( is_ssl() && ! empty( $_SERVER['SSL_SERVER_CERT'] ) ) {
-            $cert = openssl_x509_parse( $_SERVER['SSL_SERVER_CERT'] );
+            // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- a PEM certificate parsed by openssl_x509_parse(); sanitize_text_field would corrupt its newlines. Not output or SQL.
+            $cert = openssl_x509_parse( wp_unslash( $_SERVER['SSL_SERVER_CERT'] ) );
             if ( $cert ) {
                 $ssl_info['certificate'] = [
                     'subject'     => $cert['subject']['CN'] ?? null,

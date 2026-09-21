@@ -62,10 +62,12 @@ const TrueFocus: React.FC<TrueFocusProps> = ({
   useEffect(() => {
     if (currentIndex === null || currentIndex === -1) return;
 
-    if (!wordRefs.current[currentIndex] || !containerRef.current) return;
+    const container = containerRef.current;
+    const activeWord = wordRefs.current[currentIndex];
+    if (!activeWord || !container) return;
 
-    const parentRect = containerRef.current.getBoundingClientRect();
-    const activeRect = wordRefs.current[currentIndex]!.getBoundingClientRect();
+    const parentRect = container.getBoundingClientRect();
+    const activeRect = activeWord.getBoundingClientRect();
 
     setFocusRect({
       x: activeRect.left - parentRect.left,

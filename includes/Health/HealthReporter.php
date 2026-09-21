@@ -390,7 +390,7 @@ class HealthReporter {
      */
     private function log_failure( string $level, string $error ): void {
         // Log to error log
-        error_log( sprintf(
+        hubbee_debug_log( sprintf(
             'Hubbee Health Report (%s) failed: %s',
             $level,
             $error

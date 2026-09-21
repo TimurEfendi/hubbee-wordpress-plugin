@@ -385,8 +385,9 @@ void main() {
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      if (!containerRef.current || !rendererRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
+      const container = containerRef.current;
+      if (!container || !rendererRef.current) return;
+      const rect = container.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width;
       const y = (e.clientY - rect.top) / rect.height;
       mouseRef.current = { x, y };

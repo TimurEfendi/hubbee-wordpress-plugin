@@ -59,8 +59,13 @@ class EnrollEndpoint extends RestEndpoint {
             );
         }
 
+        // Same visitor-analytics decision the admin connect screen records, so
+        // this route cannot enrol a site into a different state than the UI
+        // would. The arg schema supplies the documented default when omitted.
+        $analytics_consent = (bool) $request->get_param( 'analytics_consent' );
+
         $enrollment = new EnrollmentService();
-        $result = $enrollment->enroll( $onboarding_token );
+        $result = $enrollment->enroll( $onboarding_token, $analytics_consent );
 
         if ( is_wp_error( $result ) ) {
             return $result;
@@ -94,6 +99,12 @@ class EnrollEndpoint extends RestEndpoint {
                 'type'              => 'string',
                 'required'          => true,
                 'sanitize_callback' => 'sanitize_text_field',
+            ],
+            'analytics_consent' => [
+                'description' => __( 'Whether this site should send visitor analytics to Hubbee. Defaults to enabled.', 'hubbee' ),
+                'type'        => 'boolean',
+                'required'    => false,
+                'default'     => true,
             ],
         ];
     }

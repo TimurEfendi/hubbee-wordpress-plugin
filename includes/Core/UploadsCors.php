@@ -93,9 +93,9 @@ class UploadsCors {
         insert_with_markers( $htaccess, self::MARKER, array() );
 
         // Delete the file if it's now empty (only whitespace/newlines)
-        $contents = file_get_contents( $htaccess );
+        $contents = file_get_contents( $htaccess ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- reading a local file, not a remote URL.
         if ( $contents !== false && trim( $contents ) === '' ) {
-            @unlink( $htaccess );
+            wp_delete_file( $htaccess );
         }
 
         delete_option( self::OPTION_KEY );
@@ -174,7 +174,7 @@ class UploadsCors {
      * Detect if the server is running Nginx.
      */
     private static function is_nginx(): bool {
-        $server_software = $_SERVER['SERVER_SOFTWARE'] ?? '';
+        $server_software = isset( $_SERVER['SERVER_SOFTWARE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ) ) : '';
         return stripos( $server_software, 'nginx' ) !== false;
     }
 

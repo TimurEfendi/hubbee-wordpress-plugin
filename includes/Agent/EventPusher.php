@@ -153,7 +153,7 @@ class EventPusher {
     public function push( string $event_type, array $data = [] ) {
         // Check if connected
         if ( ! $this->connection->is_connected() ) {
-            return new \WP_Error( 'bz_not_connected', __( 'Nicht mit SaaS verbunden.', 'hubbee' ) );
+            return new \WP_Error( 'bz_not_connected', __( 'Not connected to SaaS.', 'hubbee' ) );
         }
 
         // Check if event push is enabled
@@ -166,7 +166,7 @@ class EventPusher {
         $api_secret = $this->connection->get_api_secret();
 
         if ( empty( $site_id ) || empty( $api_secret ) ) {
-            return new \WP_Error( 'bz_credentials_missing', __( 'Credentials fehlen.', 'hubbee' ) );
+            return new \WP_Error( 'bz_credentials_missing', __( 'Credentials are missing.', 'hubbee' ) );
         }
 
         // Build request
@@ -1260,7 +1260,7 @@ class EventPusher {
     private function warn_if_payload_large( string $event_type, string $body ): void {
         $bytes = strlen( $body );
         if ( $bytes > 1048576 ) {
-            error_log( sprintf(
+            hubbee_debug_log( sprintf(
                 '[Hubbee EventPusher] Large event payload: %s is %d bytes (>1MB) — delivery may be unreliable.',
                 $event_type,
                 $bytes
@@ -1276,7 +1276,7 @@ class EventPusher {
      */
     private function log_success( string $message, array $context = [] ): void {
         if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-            error_log( sprintf( '[Hubbee EventPusher] %s: %s', $message, wp_json_encode( $context ) ) );
+            hubbee_debug_log( sprintf( '[Hubbee EventPusher] %s: %s', $message, wp_json_encode( $context ) ) );
         }
     }
 
@@ -1287,7 +1287,7 @@ class EventPusher {
      * @param array  $context Additional context.
      */
     private function log_error( string $message, array $context = [] ): void {
-        error_log( sprintf( '[Hubbee EventPusher ERROR] %s: %s', $message, wp_json_encode( $context ) ) );
+        hubbee_debug_log( sprintf( '[Hubbee EventPusher ERROR] %s: %s', $message, wp_json_encode( $context ) ) );
         ErrorReporter::get_instance()->record( 'EventPusher', $message, $context );
     }
 }

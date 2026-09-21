@@ -103,7 +103,7 @@ class SystemInfoEndpoint extends RestEndpoint {
             'display_errors'    => ini_get( 'display_errors' ),
             'log_errors'        => ini_get( 'log_errors' ),
             'error_log'         => ini_get( 'error_log' ),
-            'error_reporting'   => error_reporting(),
+            'error_reporting'   => error_reporting(), // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_error_reporting,WordPress.PHP.DevelopmentFunctions.prevent_path_disclosure_error_reporting -- reads (does not set) the level for the admin-only system-info diagnostic.
             'opcache_enabled'   => function_exists( 'opcache_get_status' ) && @opcache_get_status() !== false,
             'curl_version'      => function_exists( 'curl_version' ) ? curl_version()['version'] : null,
             'openssl_version'   => defined( 'OPENSSL_VERSION_TEXT' ) ? OPENSSL_VERSION_TEXT : null,
@@ -120,14 +120,14 @@ class SystemInfoEndpoint extends RestEndpoint {
      * @return array
      */
     private function get_server_info(): array {
-        $server_software = $_SERVER['SERVER_SOFTWARE'] ?? 'Unknown';
+        $server_software = isset( $_SERVER['SERVER_SOFTWARE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ) ) : 'Unknown';
 
         return [
             'software'     => $server_software,
             'hostname'     => gethostname() ?: 'Unknown',
-            'ip'           => $_SERVER['SERVER_ADDR'] ?? null,
-            'protocol'     => $_SERVER['SERVER_PROTOCOL'] ?? null,
-            'document_root'=> $_SERVER['DOCUMENT_ROOT'] ?? null,
+            'ip'           => isset( $_SERVER['SERVER_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_ADDR'] ) ) : null,
+            'protocol'     => isset( $_SERVER['SERVER_PROTOCOL'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_PROTOCOL'] ) ) : null,
+            'document_root'=> isset( $_SERVER['DOCUMENT_ROOT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['DOCUMENT_ROOT'] ) ) : null,
             'os'           => PHP_OS,
             'os_family'    => PHP_OS_FAMILY,
             'architecture' => php_uname( 'm' ),

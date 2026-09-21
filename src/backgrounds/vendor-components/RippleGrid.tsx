@@ -89,8 +89,9 @@ void main(){
       renderer.setSize(w, h); uniforms.iResolution.value = [w, h];
     };
     const handleMouseMove = (e: MouseEvent) => {
-      if (!mouseInteraction || !containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
+      const container = containerRef.current;
+      if (!mouseInteraction || !container) return;
+      const rect = container.getBoundingClientRect();
       targetMouseRef.current = { x: (e.clientX - rect.left) / rect.width, y: 1.0 - (e.clientY - rect.top) / rect.height };
     };
     const handleMouseEnter = () => { if (mouseInteraction) mouseInfluenceRef.current = 1.0; };

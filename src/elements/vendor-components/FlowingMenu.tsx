@@ -144,8 +144,9 @@ function MenuItem({ link, text, image, speed, textColor, marqueeBgColor, marquee
   }, [text, image, repetitions, speed, font, fontSize]);
 
   const handleMouseEnter = (ev: React.MouseEvent) => {
-    if (!itemRef.current || !marqueeRef.current || !marqueeInnerRef.current) return;
-    const rect = itemRef.current.getBoundingClientRect();
+    const item = itemRef.current;
+    if (!item || !marqueeRef.current || !marqueeInnerRef.current) return;
+    const rect = item.getBoundingClientRect();
     const x = ev.clientX - rect.left;
     const y = ev.clientY - rect.top;
     const edge = findClosestEdge(x, y, rect.width, rect.height);
@@ -158,8 +159,9 @@ function MenuItem({ link, text, image, speed, textColor, marqueeBgColor, marquee
   };
 
   const handleMouseLeave = (ev: React.MouseEvent) => {
-    if (!itemRef.current || !marqueeRef.current || !marqueeInnerRef.current) return;
-    const rect = itemRef.current.getBoundingClientRect();
+    const item = itemRef.current;
+    if (!item || !marqueeRef.current || !marqueeInnerRef.current) return;
+    const rect = item.getBoundingClientRect();
     const x = ev.clientX - rect.left;
     const y = ev.clientY - rect.top;
     const edge = findClosestEdge(x, y, rect.width, rect.height);

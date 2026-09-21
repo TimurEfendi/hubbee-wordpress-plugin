@@ -76,6 +76,30 @@ class HealthScheduler {
     }
 
     /**
+     * Whether the SaaS disabled scheduled health snapshots for this site's
+     * plan (explicit 0 stored via IntervalSync), or a site owner opted out
+     * via the `hubbee_health_reports_enabled` filter (parity with
+     * `hubbee_heartbeat_enabled`). The daily deep check is NOT affected —
+     * it keeps the plugin/theme inventory fresh at 1 request/day.
+     *
+     * @return bool
+     */
+    public static function is_snapshot_disabled(): bool {
+        /**
+         * Filter: hubbee_health_reports_enabled
+         *
+         * Return false to disable scheduled health snapshot reports.
+         * Default: true.
+         *
+         * @param bool $enabled Whether scheduled health snapshots should run.
+         */
+        if ( ! apply_filters( 'hubbee_health_reports_enabled', true ) ) {
+            return true;
+        }
+        return 0 === (int) get_option( 'bz_health_check_interval', self::DEFAULT_INTERVAL_SNAPSHOT );
+    }
+
+    /**
      * Register custom cron intervals
      *
      * @param array $schedules Existing schedules.
@@ -98,12 +122,19 @@ class HealthScheduler {
      * Ensure all health check events are scheduled
      */
     private function ensure_scheduled(): void {
-        // Snapshot at dynamic interval — health data collection
-        if ( ! wp_next_scheduled( self::HOOK_SNAPSHOT ) ) {
+        // Snapshot at dynamic interval — health data collection. When the plan
+        // disabled snapshots (explicit 0), also heal a stale cron entry left
+        // from before the 0 arrived.
+        if ( self::is_snapshot_disabled() ) {
+            if ( wp_next_scheduled( self::HOOK_SNAPSHOT ) ) {
+                self::unschedule_snapshot();
+            }
+        } elseif ( ! wp_next_scheduled( self::HOOK_SNAPSHOT ) ) {
             wp_schedule_event( time() + 60, 'hubbee_health_snapshot_interval', self::HOOK_SNAPSHOT );
         }
 
-        // Deep daily - full diagnostics (memory, disk, plugin updates)
+        // Deep daily - full diagnostics (memory, disk, plugin updates).
+        // Runs on every plan (1 request/day keeps the update inventory fresh).
         if ( ! wp_next_scheduled( self::HOOK_DEEP ) ) {
             wp_schedule_event( time() + 120, 'daily', self::HOOK_DEEP );
         }
@@ -124,8 +155,12 @@ class HealthScheduler {
         // Clear any existing schedules first (includes deprecated ping)
         self::unschedule_all();
 
-        // Schedule with slight offsets to prevent all running at once
-        wp_schedule_event( time() + 70, 'hubbee_health_snapshot_interval', self::HOOK_SNAPSHOT );
+        // Schedule with slight offsets to prevent all running at once.
+        // Snapshot respects a stored plan-disable (explicit 0); deep is
+        // always on (1 request/day inventory freshness).
+        if ( ! self::is_snapshot_disabled() ) {
+            wp_schedule_event( time() + 70, 'hubbee_health_snapshot_interval', self::HOOK_SNAPSHOT );
+        }
         wp_schedule_event( time() + 130, 'daily', self::HOOK_DEEP );
     }
 
@@ -149,12 +184,25 @@ class HealthScheduler {
     /**
      * Reschedule with updated interval
      *
-     * Called when CommandPoller detects a new health_check_interval_minutes from SaaS.
+     * Called when IntervalSync stores a new health_check_interval_minutes.
      */
     public static function reschedule(): void {
         wp_clear_scheduled_hook( self::HOOK_SNAPSHOT );
+        if ( self::is_snapshot_disabled() ) {
+            return;
+        }
         add_filter( 'cron_schedules', [ __CLASS__, 'register_intervals_static' ] );
         wp_schedule_event( time() + 60, 'hubbee_health_snapshot_interval', self::HOOK_SNAPSHOT );
+    }
+
+    /**
+     * Unschedule only the snapshot event
+     *
+     * Called by IntervalSync when the plan disables scheduled snapshots
+     * (explicit interval 0). The daily deep check stays scheduled.
+     */
+    public static function unschedule_snapshot(): void {
+        wp_clear_scheduled_hook( self::HOOK_SNAPSHOT );
     }
 
     /**
@@ -176,6 +224,13 @@ class HealthScheduler {
      * Pushes plugin/theme inventory async with 1h debounce.
      */
     public function handle_snapshot(): void {
+        // Late plan-disable guard: a stale cron entry may still fire once
+        // after the SaaS turned snapshots off — bail and clear it.
+        if ( self::is_snapshot_disabled() ) {
+            self::unschedule_snapshot();
+            return;
+        }
+
         // Check if we should throttle due to repeated failures
         if ( $this->reporter->should_throttle() ) {
             return;

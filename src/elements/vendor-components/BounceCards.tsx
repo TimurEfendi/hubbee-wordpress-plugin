@@ -10,6 +10,8 @@ import './BounceCards.css';
 interface BounceCardsProps {
   className?: string;
   images?: string[];
+  /** Hubbee extension: per-card caption overlay, index-aligned with images. */
+  captions?: string[];
   containerWidth?: number;
   containerHeight?: number;
   cardSize?: number;
@@ -43,6 +45,7 @@ const scaleTranslate = (t: string, s: number): string =>
 export default function BounceCards({
   className = '',
   images: rawImages = [],
+  captions,
   containerWidth,
   containerHeight,
   cardSize = 200,
@@ -186,7 +189,10 @@ export default function BounceCards({
           onMouseEnter={() => pushSiblings(idx)}
           onMouseLeave={resetSiblings}
         >
-          <img className="image" src={src} alt={`card-${idx}`} />
+          <img className="image" src={src} alt={captions?.[idx] || `card-${idx}`} />
+          {captions?.[idx] ? (
+            <span className="bc-caption" aria-hidden="true">{captions[idx]}</span>
+          ) : null}
         </div>
       ))}
     </div>

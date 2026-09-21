@@ -31,19 +31,7 @@ const bgStyle = (bg?: DecayCardChunkProps['cardBackground']): React.CSSPropertie
 registerElementChunk('decay-card', (container, rawConfig) => {
   const root: Root = createRoot(container);
   const render = (cfg: Record<string, unknown>) => {
-    const props = mapDecayCard(cfg) as DecayCardChunkProps;
-    const headlineStyle: React.CSSProperties = {
-      fontFamily: props.headlineFont ?? undefined,
-      fontSize: props.headlineFontSize ? `${props.headlineFontSize}px` : undefined,
-      color: props.headlineColor ?? undefined,
-      margin: 0,
-    };
-    const bodyStyle: React.CSSProperties = {
-      fontFamily: props.bodyFont ?? undefined,
-      fontSize: props.bodyFontSize ? `${props.bodyFontSize}px` : undefined,
-      color: props.bodyColor ?? undefined,
-      margin: 0,
-    };
+    const props = mapDecayCard(cfg) as DecayCardChunkProps & Record<string, unknown>;
     // Outer wrapper propagates `--hb-card-bg` only. DecayCard.css applies it
     // as backdrop on `.decay-card-content` so transparent PNGs show the
     // gradient behind the SVG image (scope-tight to image area).
@@ -64,6 +52,12 @@ registerElementChunk('decay-card', (container, rawConfig) => {
       alignItems: 'center',
       justifyContent: 'center',
     };
+    // Pass the FULL mapper output (minus cardBackground, handled above) so the
+    // vendor's internal headline/body branch and crop bake render — the same
+    // path the editor preview uses. The previous h3/p children suppressed that
+    // branch and silently dropped the crop legs (focalX/focalY/cropZoom/rotation).
+    const { cardBackground: _cardBackground, ...vendorProps } = props;
+    void _cardBackground;
     root.render(
       React.createElement(
         'div',
@@ -71,12 +65,7 @@ registerElementChunk('decay-card', (container, rawConfig) => {
         React.createElement(
           'div',
           { style: wrapperStyle },
-          React.createElement(
-            DecayCard,
-            { image: props.image, width: props.width, height: props.height },
-            props.headline ? React.createElement('h3', { style: headlineStyle }, props.headline) : null,
-            props.body ? React.createElement('p', { style: bodyStyle }, props.body) : null,
-          ),
+          React.createElement(DecayCard, vendorProps as never),
         ),
       ),
     );

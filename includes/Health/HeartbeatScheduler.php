@@ -60,12 +60,32 @@ class HeartbeatScheduler {
             return;
         }
 
+        // Plan-driven disable: the SaaS sent an explicit interval of 0
+        // (stored via IntervalSync). No scheduling until a positive interval
+        // arrives again (heartbeat response, push, or manual poll).
+        if ( self::is_disabled() ) {
+            self::unschedule();
+            return;
+        }
+
         add_filter( 'cron_schedules', [ $this, 'register_interval' ] );
         add_action( self::HOOK, [ $this, 'send_heartbeat' ] );
 
         if ( ! wp_next_scheduled( self::HOOK ) ) {
             wp_schedule_event( time() + 30, self::SCHEDULE, self::HOOK );
         }
+    }
+
+    /**
+     * Whether the SaaS disabled the heartbeat for this site's plan.
+     *
+     * True only when an explicit 0 was stored — a missing option means
+     * "never synced" and falls back to DEFAULT_INTERVAL.
+     *
+     * @return bool
+     */
+    public static function is_disabled(): bool {
+        return 0 === (int) get_option( 'bz_heartbeat_interval', self::DEFAULT_INTERVAL );
     }
 
     /**
@@ -102,6 +122,13 @@ class HeartbeatScheduler {
         // Late opt-out: even if the cron event was scheduled before the filter
         // was added (e.g. via mu-plugin loaded after this scheduler), bail here.
         if ( ! apply_filters( 'hubbee_heartbeat_enabled', true ) ) {
+            return;
+        }
+
+        // Late plan-disable guard: a stored 0 means the SaaS turned the
+        // heartbeat off; clear any stale cron entry and stop.
+        if ( self::is_disabled() ) {
+            self::unschedule();
             return;
         }
 
@@ -152,6 +179,15 @@ class HeartbeatScheduler {
             delete_option( 'bz_heartbeat_failures' );
             delete_transient( 'bz_heartbeat_backoff' );
         }
+
+        // The heartbeat response is the steady-state carrier for plan-driven
+        // monitoring intervals (prod sites don't command-poll). An explicit 0
+        // unschedules — clearing our own hook inside its callback is safe,
+        // this run already completes.
+        $body = json_decode( wp_remote_retrieve_body( $response ), true );
+        if ( is_array( $body ) ) {
+            IntervalSync::apply( $body );
+        }
     }
 
     /**
@@ -176,10 +212,13 @@ class HeartbeatScheduler {
     /**
      * Reschedule with updated interval
      *
-     * Called when CommandPoller detects a new heartbeat_interval_seconds from SaaS.
+     * Called when IntervalSync stores a new heartbeat_interval_seconds.
      */
     public static function reschedule(): void {
         wp_clear_scheduled_hook( self::HOOK );
+        if ( self::is_disabled() ) {
+            return;
+        }
         wp_schedule_event( time() + 30, self::SCHEDULE, self::HOOK );
     }
 
@@ -189,6 +228,9 @@ class HeartbeatScheduler {
     public static function schedule(): void {
         add_filter( 'cron_schedules', [ __CLASS__, 'register_interval_static' ] );
         self::unschedule();
+        if ( self::is_disabled() ) {
+            return;
+        }
         wp_schedule_event( time() + 30, self::SCHEDULE, self::HOOK );
     }
 

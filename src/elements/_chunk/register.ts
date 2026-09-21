@@ -20,12 +20,51 @@
  */
 
 import type { MountFn } from '../_runtime/types';
+import { ensureConfigFonts } from './fonts';
+
+/**
+ * Wrap a mount function so configured webfonts are loaded BEFORE the first
+ * render (and before config updates re-render). Canvas/WebGL renderers
+ * rasterize text at mount — without this, Google-font typography configured
+ * in the SaaS silently degraded to fallback fonts on the published page,
+ * while system fonts resolve immediately (no added latency).
+ */
+function withFontPreload(mountFn: MountFn): MountFn {
+  return (container, config) => {
+    let handle: ReturnType<MountFn> | null = null;
+    let unmounted = false;
+    let pendingConfig: Record<string, unknown> | null = null;
+    void ensureConfigFonts(config).then(() => {
+      if (unmounted) return;
+      handle = mountFn(container, config);
+      if (pendingConfig) {
+        handle.update(pendingConfig);
+        pendingConfig = null;
+      }
+    });
+    return {
+      update: (cfg: Record<string, unknown>) => {
+        void ensureConfigFonts(cfg).then(() => {
+          if (unmounted) return;
+          if (handle) handle.update(cfg);
+          else pendingConfig = cfg;
+        });
+      },
+      unmount: () => {
+        unmounted = true;
+        handle?.unmount();
+        handle = null;
+      },
+    };
+  };
+}
 
 export function registerElementChunk(
   slug: string,
-  mountFn: MountFn,
+  rawMountFn: MountFn,
   requiredVersion = 1
 ): void {
+  const mountFn = withFontPreload(rawMountFn);
   const w = window as unknown as {
     __bz_el_runtime?: { version: number; register: (n: string, fn: MountFn) => void };
     __bz_el_register?: (n: string, fn: MountFn) => void;

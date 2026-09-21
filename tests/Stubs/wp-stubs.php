@@ -58,3 +58,38 @@ if ( ! function_exists( 'home_url' ) ) {
         return ( $GLOBALS['__wp_home_url'] ?? 'https://example.com' ) . $path;
     }
 }
+
+if ( ! function_exists( 'update_option' ) ) {
+    function update_option( string $name, $value, $autoload = null ): bool {
+        $GLOBALS['__wp_options'][ $name ] = $value;
+        return true;
+    }
+}
+
+if ( ! function_exists( 'add_filter' ) ) {
+    function add_filter( string $hook, $callback, int $priority = 10, int $accepted_args = 1 ): bool {
+        return true;
+    }
+}
+
+// WP-Cron surface: backed by a simple hook→timestamp map so scheduler tests
+// can assert schedule/unschedule behavior without WordPress.
+if ( ! function_exists( 'wp_next_scheduled' ) ) {
+    function wp_next_scheduled( string $hook ) {
+        return $GLOBALS['__wp_cron'][ $hook ] ?? false;
+    }
+}
+
+if ( ! function_exists( 'wp_schedule_event' ) ) {
+    function wp_schedule_event( int $timestamp, string $recurrence, string $hook ) {
+        $GLOBALS['__wp_cron'][ $hook ] = $timestamp;
+        return true;
+    }
+}
+
+if ( ! function_exists( 'wp_clear_scheduled_hook' ) ) {
+    function wp_clear_scheduled_hook( string $hook ) {
+        unset( $GLOBALS['__wp_cron'][ $hook ] );
+        return 0;
+    }
+}

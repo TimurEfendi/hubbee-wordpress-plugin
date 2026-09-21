@@ -189,7 +189,7 @@ class CronResilience {
                 printf(
                     /* translators: %s: wp-cron.php URL on the current site */
                     esc_html__( 'Recommended: add a real server cron that requests %s every few minutes. Hubbee also runs a lightweight fallback automatically, but a server cron is more reliable.', 'hubbee' ),
-                    '<code>' . $cron_url . '</code>'
+                    '<code>' . esc_url( $cron_url ) . '</code>'
                 );
                 ?>
             </p>

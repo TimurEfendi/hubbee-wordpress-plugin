@@ -26,3 +26,23 @@
   height: 100%;
   object-fit: cover;
 }
+
+/* Hubbee extension: per-card caption overlay (rendered only when the card
+   has a caption). Typography vars are set by the SaaS wrapper from
+   design.itemFont/itemFontSize/itemColor when configured. */
+.bounceCardsContainer .card .bc-caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 8px 10px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.65), transparent);
+  font-family: var(--bc-caption-font, inherit);
+  font-size: var(--bc-caption-size, 14px);
+  color: var(--bc-caption-color, #ffffff);
+  line-height: 1.3;
+  pointer-events: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

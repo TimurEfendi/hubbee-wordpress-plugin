@@ -119,9 +119,9 @@ $htaccess   = trailingslashit( $upload_dir['basedir'] ) . '.htaccess';
 if ( file_exists( $htaccess ) ) {
     insert_with_markers( $htaccess, 'Hubbee CORS', array() );
     // Remove file if now empty.
-    $contents = file_get_contents( $htaccess );
+    $contents = file_get_contents( $htaccess ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- reading a local file, not a remote URL.
     if ( $contents !== false && trim( $contents ) === '' ) {
-        @unlink( $htaccess );
+        wp_delete_file( $htaccess );
     }
 }
 
@@ -134,12 +134,12 @@ if ( is_dir( $chunks_dir ) ) {
     if ( is_array( $files ) ) {
         foreach ( $files as $file ) {
             if ( is_file( $file ) ) {
-                @unlink( $file );
+                wp_delete_file( $file );
             }
         }
     }
-    @rmdir( $chunks_dir );
-    @rmdir( trailingslashit( $upload_dir['basedir'] ) . 'hubbee' );
+    @rmdir( $chunks_dir ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir -- removing the plugin's own empty upload directory during uninstall.
+    @rmdir( trailingslashit( $upload_dir['basedir'] ) . 'hubbee' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir -- removing the plugin's own empty upload directory during uninstall.
 }
 
 /**

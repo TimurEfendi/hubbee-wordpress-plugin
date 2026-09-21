@@ -446,7 +446,9 @@ export default function ASCIIText({
     };
 
     const setup = async () => {
-      const { width, height } = containerRef.current!.getBoundingClientRect();
+      const container = containerRef.current;
+      if (!container) return;
+      const { width, height } = container.getBoundingClientRect();
       if (width === 0 || height === 0) {
         observer = new IntersectionObserver(async ([entry]) => {
           if (cancelled) return;

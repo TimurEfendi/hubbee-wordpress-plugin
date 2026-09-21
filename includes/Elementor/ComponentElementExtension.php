@@ -241,7 +241,7 @@ class ComponentElementExtension {
     public static function chunk_version( string $chunk_file ): string {
         $sidecar = $chunk_file . '.sha256';
         if ( file_exists( $sidecar ) ) {
-            $hash = trim( (string) file_get_contents( $sidecar ) );
+            $hash = trim( (string) file_get_contents( $sidecar ) ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- reading a local file, not a remote URL.
             if ( '' !== $hash ) {
                 // Use the hash hex as a compact cache-bust token. Strip the
                 // "sha256:" prefix to keep the URL query param short.

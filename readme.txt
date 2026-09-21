@@ -1,10 +1,10 @@
 === Hubbee ===
 Contributors: 2brandsmedia
-Tags: site management, content sync, multi-site, agency, elementor
-Requires at least: 5.6
+Tags: site management, content sync, multi-site, agency, remote management
+Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 2.0.6
+Stable tag: 2.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -35,7 +35,7 @@ This plugin connects to the Hubbee SaaS to receive content and report site healt
 * **Hubbee API (Hetzner, Germany)** — `https://api.hubbee.io`. Lower-latency endpoint for European sites, activated when you set `define( 'HUBBEE_API_ENDPOINT', 'https://api.hubbee.io' );` in `wp-config.php`.
 * **CORS allowlist** for inbound calls: `hubbee.io`, `www.hubbee.io`, `app.hubbee.io`, `api.hubbee.io`.
 
-**Dynamic visual-effect chunks**: when you assign a background, element, or text-effect to a site in your Hubbee dashboard, the plugin downloads the corresponding compiled JavaScript chunk from your Hubbee Cloud account and stores it locally in `wp-content/uploads/hubbee/chunks/`. Each chunk is integrity-checked via SHA-256 hash before being written. The plugin ships with a fixed runtime + vendor library (~55 KB) that loads only the locally-stored chunks via `wp_enqueue_script` — no third-party CDN at runtime, no per-page-view external requests.
+**Dynamic visual-effect chunks**: when you assign a background, element, or text-effect to a site in your Hubbee dashboard, the plugin downloads the corresponding compiled JavaScript chunk from your Hubbee Cloud account and stores it locally in `wp-content/uploads/hubbee/chunks/`. Each chunk is integrity-checked via SHA-256 hash before being written. The plugin ships with a fixed runtime plus the open-source vendor libraries the WebGL/Canvas effects rely on — React, Three.js and React-Three-Fiber, about 1 MB in total (all minified but readable, not obfuscated) — which load only the locally-stored chunks via `wp_enqueue_script`. No third-party CDN at runtime, no per-page-view external requests.
 
 **What is sent to Hubbee Cloud automatically (when connected):**
 
@@ -43,7 +43,7 @@ This plugin connects to the Hubbee SaaS to receive content and report site healt
 * Optional health snapshots (WordPress version, PHP version, plugin version, token count)
 * Optional deep health reports (memory and disk usage percentages, available plugin and theme update list, last error message)
 * Token push receipts (per content update — confirms which tokens were applied)
-* Optional visitor analytics — **off by default, opt-in only** (page path, a per-session hash, referrer domain, user agent); enable/disable from your dashboard
+* Visitor analytics — anonymous and cookieless (page path, a random per-session hash, referrer domain, user agent), aggregated per day. **You choose this when you connect the site**: the connect screen shows a clearly labelled checkbox, and your answer is stored on your own site. Uncheck it and no tracking script is ever loaded. You can change your mind at any time from your Hubbee dashboard (workspace settings) or in code via the `hubbee_analytics_enabled` filter. Nothing is collected while the site is not connected, and no cookies are set at any point.
 
 **Site management — only on a command you trigger from your Hubbee dashboard** (each request HMAC-SHA256 signed with your per-site secret):
 
@@ -64,7 +64,7 @@ The plugin requires an active Hubbee account at https://hubbee.io. A permanent f
 
 == Installation ==
 
-1. In WordPress Admin, go to **Plugins → Add New**, search for **Hubbee**, click **Install Now**, then **Activate**. (Alternative: download `hubbee.zip` from the Hubbee dashboard and upload via Plugins → Add New → Upload Plugin.)
+1. Install the plugin and activate it. You can also download `hubbee.zip` from your Hubbee dashboard (or from https://hubbee.io/en/download) and upload it via **Plugins → Add New → Upload Plugin** — the dashboard always serves the build that matches your account.
 2. In the Hubbee dashboard at https://app.hubbee.io, click **Add Site**, generate a one-time connection code, copy it.
 3. Back in WordPress Admin, navigate to **Hubbee → Settings**, paste the connection code, click **Connect**.
 4. Within seconds, the site appears in your Hubbee dashboard with online status and basic health information. Token-push, asset-assign, and health-monitoring are now active.
@@ -78,6 +78,16 @@ Yes. Hubbee is a service-plugin — the WordPress side is the agent, the SaaS at
 = Why does the plugin use the `bz/v1` REST namespace and `BZ_*` PHP constants? =
 
 Hubbee evolved from a previous product called "Brandzilla". The internal `bz_*` prefixes (database tables, options, action hooks, REST namespace, JavaScript hydration attributes) are kept for backwards-compatibility with existing installs — renaming them would force a destructive migration on every customer site. The plugin name and all user-facing surface are now fully "Hubbee".
+
+= How do I turn visitor analytics off? =
+
+Three ways, all equivalent — the plugin stores one option (`bz_analytics_enabled`) and every path writes it:
+
+1. **When connecting**: uncheck "Send visitor analytics to Hubbee" on the connect screen. Nothing is ever loaded.
+2. **Later, from the dashboard**: workspace settings in your Hubbee account. The change reaches every connected site.
+3. **In code**: `add_filter( 'hubbee_analytics_enabled', '__return_false' );` in a mu-plugin. This wins over both of the above.
+
+**Hubbee → Settings** always shows the state that is actually in effect for the site. When analytics is off, the tracking script is not enqueued at all — there is no beacon, no request, and no cookie.
 
 = Can I disable heartbeats and health-reports? =
 
@@ -115,11 +125,13 @@ Yes. After a content push, the plugin automatically clears its own internal mani
 
 = A component is still visible on the frontend although I deleted it in the SaaS. What now? =
 
-Run `wp hubbee cache clear --all`, then purge any page-level / CDN cache. The plugin's manifest tells it which components are still active; orphaned components are removed on the next manifest refresh. Full troubleshooting flow at https://hubbee.io/help/troubleshooting-plugin.
+Purge any page-level / CDN cache. The plugin's manifest tells it which components are still active; orphaned components are removed on the next manifest refresh. Full troubleshooting flow at https://hubbee.io/help/troubleshooting-plugin.
 
 = Is Elementor required? =
 
-No. Elementor integration is optional and only initialised when Elementor is active. Without Elementor, you still get the SaaS-controlled content tokens (renderable via shortcode `[bz_text key="hero_title"]` and a Gutenberg block), the asset library, and component-rendering — Elementor just adds Dynamic-Tag convenience for token rendering inside Elementor templates.
+For content tokens, no. They render on any WordPress site via the shortcode `[bz_text key="hero_title"]` and the "Hubbee Token" block; site health, update inventory and monitoring work without Elementor as well. Elementor only adds Dynamic-Tag convenience for token rendering inside Elementor templates.
+
+For the asset library (backgrounds, animated elements, text effects), yes — embedding those assets currently requires Elementor, where they appear as container background options, widgets and heading styles. WordPress-native embedding without Elementor is in development and not shipped yet.
 
 = Is the source code open? =
 
@@ -138,6 +150,30 @@ Standard WordPress flow: Plugins → Hubbee → Deactivate → Delete. The plugi
 5. Health detail view per site — memory, disk, plugin and theme updates, last error.
 
 == Changelog ==
+
+= 2.2.0 =
+* New: the connect screen now asks explicitly whether this site should send visitor analytics. Your answer is stored on your own site when the connection is established, and the Hubbee Agent settings page shows the current state in plain words. Unchecking the box means no tracking script is ever enqueued.
+* Fix: the plugin reported "analytics off" to the dashboard for every site that had never received an explicit toggle command, while the tracking script was in fact running (a mismatch between the tracker's default and the default used when reporting the state). Both now agree, so the dashboard shows the truth.
+* Docs: the readme describes the analytics behaviour as it actually ships, and the changelog documents the 2.0.9 default change that was previously missing.
+
+= 2.1.0 =
+* New: monitoring cadence now follows your Hubbee plan. The SaaS sends the heartbeat and health-check intervals with every heartbeat response (and command poll), and the plugin applies them dynamically — an explicit 0 cleanly unschedules the heartbeat and the scheduled health snapshots (Free plan). The daily deep check stays active on every plan so the update inventory keeps refreshing.
+* New: `hubbee_health_reports_enabled` filter — site owners can disable scheduled health snapshot reports in code, matching the existing `hubbee_heartbeat_enabled` opt-out.
+* Dev: interval sync consolidated into a single `IntervalSync` class shared by the heartbeat response and the command poller.
+
+= 2.0.9 =
+* Changed: visitor analytics became **on by default** for sites connected to a Hubbee workspace, controlled by a single workspace-wide switch in the dashboard instead of a per-site opt-in. This entry was missing from earlier releases of this readme — it is documented here for the record, and 2.2.0 replaces the silent default with an explicit choice on the connect screen.
+
+= 2.0.8 =
+* New: visitor analytics can now be switched on from the Hubbee dashboard (Site → Settings → General). The dashboard sends an explicit opt-in command; the plugin reports the current state back with the settings snapshot. Analytics remains strictly opt-in and off by default.
+* Fix: the tracking beacon sends each page view exactly once — previously every tab switch could re-send the same page view and inflate the numbers. The beacon now uses `pagehide` instead of `beforeunload`, and unique-visitor/bounce calculation moved server-side for accurate statistics.
+* Fix: smoother text-effect rendering (whitespace normalisation) and live ball-pit configurator parameters, delivered via the dynamic effect chunks.
+
+= 2.0.7 =
+* i18n: plugin source strings are now English, with a full German (de_DE) translation and an accurate POT — sites in either language are fully localised.
+* Compatibility: resolves all official WordPress.org Plugin Check errors (58 → 0), for a clean directory submission.
+* Security: unslash and sanitize every `$_SERVER`/`$_POST` read, escape the cron URL, and gate debug logging behind `WP_DEBUG`.
+* Assets: icon and banner rendered from the vector brand kit. No functional changes to the site-management surface since 2.0.6.
 
 = 2.0.6 =
 * Fix: "remove site" from the dashboard no longer triggers a fatal error on the site (and the WordPress recovery-mode emails that came with it); every remote command now fails gracefully instead of ever escalating to a PHP fatal.
@@ -176,6 +212,12 @@ Standard WordPress flow: Plugins → Hubbee → Deactivate → Delete. The plugi
 * Auto-upgrade migration from "Brandzilla" predecessor (preserves existing content).
 
 == Upgrade Notice ==
+
+= 2.2.0 =
+The connect screen now asks explicitly whether the site should send visitor analytics, and the settings page states the current answer. Also fixes a reporting mismatch that could make the dashboard show "analytics off" for a site that was in fact tracking. Recommended for all sites.
+
+= 2.0.7 =
+English source strings + full German translation, WordPress.org Plugin Check compliance, and security hardening ($_SERVER/$_POST sanitisation, cron URL escaping, WP_DEBUG-gated logging). No change to the site-management behaviour. Recommended for all sites.
 
 = 2.0.6 =
 Fixes a fatal error on site removal, makes remote commands idempotent, adds Elementor-Pro-free token rendering (shortcode + block), and makes visitor analytics opt-in. Recommended for all sites.

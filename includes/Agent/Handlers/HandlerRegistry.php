@@ -73,6 +73,7 @@ class HandlerRegistry {
      * CommandExecutor's monolith.
      */
     private function register_defaults(): void {
+        $this->register( AnalyticsCommandHandler::class );
         $this->register( CacheCommandHandler::class );
         $this->register( HealthCommandHandler::class );
         $this->register( PluginCommandHandler::class );

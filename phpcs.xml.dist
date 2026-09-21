@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<ruleset name="Hubbee">
+	<description>Coding standards for the Hubbee WordPress plugin.</description>
+
+	<!-- Scan the plugin PHP, skip build/vendor/test artefacts. -->
+	<file>.</file>
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/tests/*</exclude-pattern>
+	<exclude-pattern>*/dist/*</exclude-pattern>
+	<exclude-pattern>*/src/*</exclude-pattern>
+
+	<arg name="extensions" value="php"/>
+	<arg name="basepath" value="."/>
+	<arg value="ps"/>
+
+	<config name="minimum_supported_wp_version" value="5.6"/>
+	<config name="testVersion" value="8.1-"/>
+
+	<rule ref="WordPress">
+		<!-- The plugin ships its own build tooling; these style-only sniffs are
+		     out of scope for the WordPress.org submission review. -->
+		<exclude name="WordPress.Files.FileName"/>
+	</rule>
+
+	<!-- Text domain used by the plugin. -->
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array" value="hubbee"/>
+		</properties>
+	</rule>
+
+	<!--
+	  Data-access layer: the plugin owns custom tables (bz_tokens, bz_components,
+	  bz_backgrounds, bz_text_effects, bz_processed_requests, …). Its queries
+	  interpolate the plugin's OWN prefixed table names — identifiers cannot be
+	  passed through $wpdb->prepare() — while every user-supplied VALUE is prepared
+	  (%s/%d) and every ORDER BY column is whitelisted. The direct-query /
+	  interpolated-identifier sniffs are therefore not applicable here (verified,
+	  not a SQL-injection surface). Scoped to the verified data-access files only,
+	  so a future genuinely-unprepared query elsewhere is still flagged.
+	-->
+	<rule ref="WordPress.DB.PreparedSQL.InterpolatedNotPrepared">
+		<exclude-pattern>*/includes/Storage/*</exclude-pattern>
+		<exclude-pattern>*/includes/Core/Migrator.php</exclude-pattern>
+		<exclude-pattern>*/includes/Health/HealthReporter.php</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.DB.PreparedSQL.NotPrepared">
+		<!-- DROP TABLE … . self::get_*_table() concatenates the plugin's own
+		     trusted table-name accessors (no user input). -->
+		<exclude-pattern>*/includes/Storage/*</exclude-pattern>
+		<exclude-pattern>*/includes/Core/Migrator.php</exclude-pattern>
+		<exclude-pattern>*/includes/Health/HealthReporter.php</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.DB.PreparedSQLPlaceholders">
+		<exclude-pattern>*/includes/Storage/*</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.DB.DirectDatabaseQuery.DirectQuery">
+		<exclude-pattern>*/includes/Storage/*</exclude-pattern>
+		<exclude-pattern>*/includes/Core/*</exclude-pattern>
+		<exclude-pattern>*/includes/Health/HealthReporter.php</exclude-pattern>
+		<exclude-pattern>*/includes/Agent/*</exclude-pattern>
+		<exclude-pattern>*/includes/REST/ContentEndpoint.php</exclude-pattern>
+		<exclude-pattern>*/includes/REST/UsersEndpoint.php</exclude-pattern>
+		<exclude-pattern>*/includes/REST/SystemInfoEndpoint.php</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.DB.DirectDatabaseQuery.NoCaching">
+		<exclude-pattern>*/includes/Storage/*</exclude-pattern>
+		<exclude-pattern>*/includes/Core/*</exclude-pattern>
+		<exclude-pattern>*/includes/Health/HealthReporter.php</exclude-pattern>
+		<exclude-pattern>*/includes/Agent/*</exclude-pattern>
+		<exclude-pattern>*/includes/REST/ContentEndpoint.php</exclude-pattern>
+		<exclude-pattern>*/includes/REST/UsersEndpoint.php</exclude-pattern>
+		<exclude-pattern>*/includes/REST/SystemInfoEndpoint.php</exclude-pattern>
+	</rule>
+</ruleset>

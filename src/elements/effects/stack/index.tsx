@@ -1,14 +1,15 @@
 import React from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import Stack from '@hubbee-saas/components/Stack';
-import StackCardContent from '@hubbee-saas/components/StackCardContent';
+import StackCardContent, { type StackCardContentProps } from '@hubbee-saas/components/StackCardContent';
 import { mapStack } from '@hubbee-shared/elements/section-to-vendor';
 import { registerElementChunk } from '../../_chunk/register';
 
 interface StackItem {
   image?: string;
   text?: string;
-  background?: { type?: string; color?: string; gradientColors?: [string, string]; gradientAngle?: number };
+  // Matches StackCardContentProps['background'] so the spread below typechecks.
+  background?: StackCardContentProps['background'];
   focalX?: number;
   focalY?: number;
   cropZoom?: number;
@@ -61,6 +62,11 @@ registerElementChunk('stack', (container, rawConfig) => {
           autoplay: props.autoplay,
           autoplayDelay: props.autoplayDelay,
           pauseOnHover: props.pauseOnHover,
+          // Deck dimensions — the sidebar sliders write design.width/height and
+          // the vendor sizes .stack-container from them; omitting them locked
+          // the published page to the vendor default size.
+          width: props.width,
+          height: props.height,
         } as never),
       ),
     );

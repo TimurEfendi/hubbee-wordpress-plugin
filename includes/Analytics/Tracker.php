@@ -24,12 +24,14 @@ class Tracker {
      * Enqueue the tracking script on frontend
      */
     public function enqueue_tracking_script(): void {
-        // Visitor analytics is OPT-IN. It runs only when the site owner has
-        // explicitly enabled it (option bz_analytics_enabled, set from the
-        // dashboard) or via the hubbee_analytics_enabled filter. Default OFF so
-        // no visitor data ever leaves the site without consent — required for
-        // WordPress.org guideline 7 and to honor the readme's privacy claims.
-        $analytics_enabled = (bool) get_option( 'bz_analytics_enabled', false );
+        // Visitor analytics is ON by default for connected sites (2.0.9+):
+        // anonymous, cookieless, aggregated per day — disclosed in the readme's
+        // external-services section. It can be switched off centrally from the
+        // Hubbee dashboard (analytics.set_enabled command sets the option) or
+        // via the hubbee_analytics_enabled filter. Nothing is ever tracked
+        // while the site is not connected to a Hubbee workspace (is_connected
+        // gate below).
+        $analytics_enabled = (bool) get_option( 'bz_analytics_enabled', true );
         $analytics_enabled = (bool) apply_filters( 'hubbee_analytics_enabled', $analytics_enabled );
         if ( ! $analytics_enabled ) {
             return;

@@ -130,6 +130,10 @@ class AssetManifestEndpoint extends RestEndpoint {
      * @param mixed $value
      */
     private static function stable_stringify( $value ): string {
+        // Byte-exact stable serialization that must match the JS-side JSON.stringify
+        // used to compute asset-manifest checksums. wp_json_encode()'s wrapper can
+        // alter the output and would break cross-language (PHP<->JS) hash matching.
+        // phpcs:disable WordPress.WP.AlternativeFunctions.json_encode_json_encode
         if ( $value === null ) return 'null';
         if ( is_bool( $value ) ) return $value ? 'true' : 'false';
         if ( is_int( $value ) || is_float( $value ) ) {
@@ -164,5 +168,6 @@ class AssetManifestEndpoint extends RestEndpoint {
 
         // resources etc. — fall back to string repr
         return json_encode( (string) $value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
+        // phpcs:enable WordPress.WP.AlternativeFunctions.json_encode_json_encode
     }
 }

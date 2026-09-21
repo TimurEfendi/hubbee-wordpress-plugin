@@ -473,6 +473,22 @@ class W {
       t1[i1] = k(e1.minSize, e1.maxSize);
     }
   }
+  // Remaps every ball's radius from the currently baked [minSize, maxSize]
+  // range into the new one, preserving each ball's percentile so live
+  // slider drags scale smoothly instead of re-rolling sizes. Index 0 is
+  // the cursor ball (size0) and stays untouched. Owns the config writes so
+  // `config.minSize/maxSize` always reflect the range baked into sizeData.
+  rescaleSizes(newMin: number, newMax: number) {
+    const { config: e1, sizeData: t1 } = this;
+    const oldMin = e1.minSize;
+    const oldSpan = e1.maxSize - oldMin;
+    for (let i1 = 1; i1 < e1.count; i1++) {
+      const ratio = Math.abs(oldSpan) > 1e-6 ? (t1[i1] - oldMin) / oldSpan : Math.random();
+      t1[i1] = newMin + ratio * (newMax - newMin);
+    }
+    e1.minSize = newMin;
+    e1.maxSize = newMax;
+  }
   update(e1: any) {
     const { config: t1, center: i1, positionData: s1, sizeData: n1, velocityData: o1 } = this;
     let r1 = 0;
@@ -550,7 +566,7 @@ class W {
       }
       const maxBoundary = Math.max(t1.maxZ, t1.maxSize);
       if (Math.abs(I.z) + radius > maxBoundary) {
-        I.z = Math.sign(I.z) * (t1.maxZ - radius);
+        I.z = Math.sign(I.z) * (maxBoundary - radius);
         B.z = -B.z * t1.wallBounce;
       }
       I.toArray(s1, base);
@@ -801,6 +817,7 @@ const Ballpit = ({ className = '', followCursor = true, colors: inputColors, ...
     // the live preview without a remount. Color-array changes go through
     // `setColors`, which rebuilds the InstancedMesh color buffer.
     let lastColorsKey = JSON.stringify(propsRef.current.inputColors ?? null);
+    let lastSeenCount: number | undefined;
     const syncId = window.setInterval(() => {
       const inst = spheresInstanceRef.current;
       if (!inst?.spheres?.config) return;
@@ -810,8 +827,11 @@ const Ballpit = ({ className = '', followCursor = true, colors: inputColors, ...
       if (typeof p.friction === 'number') cfg.friction = p.friction;
       if (typeof p.wallBounce === 'number') cfg.wallBounce = p.wallBounce;
       if (typeof p.maxVelocity === 'number') cfg.maxVelocity = p.maxVelocity;
-      if (typeof p.minSize === 'number') cfg.minSize = p.minSize;
-      if (typeof p.maxSize === 'number') cfg.maxSize = p.maxSize;
+      const nextMin = typeof p.minSize === 'number' ? p.minSize : cfg.minSize;
+      const nextMax = typeof p.maxSize === 'number' ? p.maxSize : cfg.maxSize;
+      if (nextMin !== cfg.minSize || nextMax !== cfg.maxSize) {
+        inst.spheres.physics.rescaleSizes(nextMin, nextMax);
+      }
       if (typeof p.size0 === 'number') cfg.size0 = p.size0;
       if (typeof p.lightIntensity === 'number' && inst.spheres.light) {
         inst.spheres.light.intensity = p.lightIntensity;
@@ -826,8 +846,27 @@ const Ballpit = ({ className = '', followCursor = true, colors: inputColors, ...
         lastColorsKey = colorsKey;
         const normalised =
           p.inputColors !== undefined ? normalizeColorArray(p.inputColors) : undefined;
-        if (normalised && Array.isArray(normalised)) inst.spheres.setColors(normalised);
+        if (normalised && Array.isArray(normalised)) {
+          inst.spheres.setColors(normalised);
+          // Keep cfg.colors in sync so a later count rebuild (which spreads
+          // the live config) doesn't revert to mount-time colors.
+          cfg.colors = normalised;
+        }
       }
+
+      // count is structural: buffers and the InstancedMesh size are fixed at
+      // construction, so the only correct path is the vendor's setCount()
+      // re-init. Rebuild only once the slider value has been stable for a
+      // full tick so a drag settles into a single rebuild.
+      if (
+        typeof p.count === 'number' &&
+        p.count > 0 &&
+        p.count === lastSeenCount &&
+        p.count !== cfg.count
+      ) {
+        inst.setCount(p.count);
+      }
+      lastSeenCount = typeof p.count === 'number' ? p.count : undefined;
     }, 500);
 
     // ── context-loss recovery ───────────────────────────────────────

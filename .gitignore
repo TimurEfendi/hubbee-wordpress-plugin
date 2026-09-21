@@ -1,7 +1,15 @@
+# Dependencies — installed locally/CI, never committed.
 node_modules/
-vendor/
+/vendor/
+
+# Build scratch
 dist/
+
+# Secrets — must never reach this public repository.
 .env
 .env.*
+
+# Local noise
 *.log
 .DS_Store
+.phpunit.result.cache

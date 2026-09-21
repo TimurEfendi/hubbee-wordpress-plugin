@@ -2,7 +2,7 @@
 /**
  * Error Reporter
  *
- * Scattered error_log() calls are invisible to the SaaS — a fleet-wide problem
+ * Scattered hubbee_debug_log() calls are invisible to the SaaS — a fleet-wide problem
  * (e.g. a JWT-secret rotation causing 401 spirals on hundreds of sites) only
  * surfaces when an operator SSHes into individual sites. This collector batches
  * recorded errors in-memory and pushes a sanitised, sampled batch to the SaaS on

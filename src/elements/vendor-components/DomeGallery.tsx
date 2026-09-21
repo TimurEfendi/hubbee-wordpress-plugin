@@ -8,6 +8,8 @@ import './DomeGallery.css';
 interface DomeImage {
   src: string;
   alt?: string;
+  /** Hubbee extension: optional caption overlay rendered on the tile. */
+  caption?: string;
 }
 
 interface DomeGalleryProps {
@@ -39,6 +41,7 @@ interface ItemCoord {
   sizeY: number;
   src: string;
   alt: string;
+  caption: string;
 }
 
 const DEFAULT_IMAGES: DomeImage[] = [
@@ -82,7 +85,7 @@ function buildItems(pool: (DomeImage | string)[], seg: number): ItemCoord[] {
 
   const totalSlots = coords.length;
   if (pool.length === 0) {
-    return coords.map((c) => ({ ...c, src: '', alt: '' }));
+    return coords.map((c) => ({ ...c, src: '', alt: '', caption: '' }));
   }
   if (pool.length > totalSlots) {
     console.warn(
@@ -92,9 +95,9 @@ function buildItems(pool: (DomeImage | string)[], seg: number): ItemCoord[] {
 
   const normalizedImages = pool.map((image) => {
     if (typeof image === 'string') {
-      return { src: image, alt: '' };
+      return { src: image, alt: '', caption: '' };
     }
-    return { src: image.src || '', alt: image.alt || '' };
+    return { src: image.src || '', alt: image.alt || '', caption: image.caption || '' };
   });
 
   const usedImages = Array.from({ length: totalSlots }, (_, i) => normalizedImages[i % normalizedImages.length]);
@@ -115,7 +118,8 @@ function buildItems(pool: (DomeImage | string)[], seg: number): ItemCoord[] {
   return coords.map((c, i) => ({
     ...c,
     src: usedImages[i].src,
-    alt: usedImages[i].alt
+    alt: usedImages[i].alt,
+    caption: usedImages[i].caption
   }));
 }
 
@@ -238,9 +242,11 @@ const DomeGallery = ({
       applyTransform(rotationRef.current.x, rotationRef.current.y);
 
       const enlargedOverlay = viewerRef.current?.querySelector('.enlarge') as HTMLElement | null;
-      if (enlargedOverlay && frameRef.current && mainRef.current) {
-        const frameR = frameRef.current.getBoundingClientRect();
-        const mainR = mainRef.current.getBoundingClientRect();
+      const frameEl = frameRef.current;
+      const mainEl = mainRef.current;
+      if (enlargedOverlay && frameEl && mainEl) {
+        const frameR = frameEl.getBoundingClientRect();
+        const mainR = mainEl.getBoundingClientRect();
 
         const hasCustomSize = openedImageWidth && openedImageHeight;
         if (hasCustomSize) {
@@ -385,7 +391,8 @@ const DomeGallery = ({
       if (!overlay) return;
       const refDiv = parent.querySelector('.item__image--reference') as HTMLElement | null;
       const originalPos = originalTilePositionRef.current;
-      if (!originalPos) {
+      const root = rootRef.current;
+      if (!originalPos || !root) {
         overlay.remove();
         if (refDiv) refDiv.remove();
         parent.style.setProperty('--rot-y-delta', '0deg');
@@ -399,7 +406,7 @@ const DomeGallery = ({
         return;
       }
       const currentRect = overlay.getBoundingClientRect();
-      const rootRect = rootRef.current!.getBoundingClientRect();
+      const rootRect = root.getBoundingClientRect();
       const originalPosRelativeToRoot = {
         left: originalPos.left - rootRect.left,
         top: originalPos.top - rootRect.top,
@@ -422,7 +429,7 @@ const DomeGallery = ({
         animatingOverlay.appendChild(img);
       }
       overlay.remove();
-      rootRef.current!.appendChild(animatingOverlay);
+      root.appendChild(animatingOverlay);
       void animatingOverlay.getBoundingClientRect();
       requestAnimationFrame(() => {
         animatingOverlay.style.left = originalPosRelativeToRoot.left + 'px';
@@ -658,6 +665,9 @@ const DomeGallery = ({
                   onPointerUp={onTilePointerUp}
                 >
                   <img src={it.src} draggable={false} alt={it.alt} />
+                  {it.caption ? (
+                    <span className="item__caption" aria-hidden="true">{it.caption}</span>
+                  ) : null}
                 </div>
               </div>
             ))}

@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/ban-ts-comment */
 // @ts-nocheck — 1:1 ReactBits JSX source; type-check disabled to keep file byte-identical to upstream.
 
-'use client';
 
 import { ElementType, useEffect, useRef, useState, createElement, useMemo, useCallback } from 'react';
 import { gsap } from 'gsap';

@@ -232,23 +232,9 @@ class CommandPoller {
             }
         }
 
-        // Sync heartbeat interval from SaaS
-        if ( isset( $body['heartbeat_interval_seconds'] ) ) {
-            $new_hb = (int) $body['heartbeat_interval_seconds'];
-            if ( $new_hb > 0 && $new_hb !== (int) get_option( 'bz_heartbeat_interval', 0 ) ) {
-                update_option( 'bz_heartbeat_interval', $new_hb, 'no' );
-                \Hubbee\Health\HeartbeatScheduler::reschedule();
-            }
-        }
-
-        // Sync health check interval from SaaS
-        if ( isset( $body['health_check_interval_minutes'] ) ) {
-            $new_hc_sec = (int) $body['health_check_interval_minutes'] * 60;
-            if ( $new_hc_sec > 0 && $new_hc_sec !== (int) get_option( 'bz_health_check_interval', 0 ) ) {
-                update_option( 'bz_health_check_interval', $new_hc_sec, 'no' );
-                \Hubbee\Health\HealthScheduler::reschedule();
-            }
-        }
+        // Sync plan-driven monitoring intervals from SaaS (shared logic with
+        // the heartbeat-response ingest; explicit 0 = unschedule).
+        \Hubbee\Health\IntervalSync::apply( $body );
 
         // Version-skew awareness. If the SaaS signals a minimum supported plugin
         // version, flag an admin upgrade notice (AdminController renders it).
@@ -633,7 +619,7 @@ class CommandPoller {
      */
     private function log_success( string $message, array $context = [] ): void {
         if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-            error_log( sprintf( '[Hubbee CommandPoller] %s: %s', $message, wp_json_encode( $context ) ) );
+            hubbee_debug_log( sprintf( '[Hubbee CommandPoller] %s: %s', $message, wp_json_encode( $context ) ) );
         }
     }
 
@@ -644,7 +630,7 @@ class CommandPoller {
      * @param array  $context Additional context.
      */
     private function log_error( string $message, array $context = [] ): void {
-        error_log( sprintf( '[Hubbee CommandPoller ERROR] %s: %s', $message, wp_json_encode( $context ) ) );
+        hubbee_debug_log( sprintf( '[Hubbee CommandPoller ERROR] %s: %s', $message, wp_json_encode( $context ) ) );
         ErrorReporter::get_instance()->record( 'CommandPoller', $message, $context );
     }
 }

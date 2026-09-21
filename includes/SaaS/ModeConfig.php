@@ -422,7 +422,7 @@ class ModeConfig {
         set_transient( $throttle_key, true, HOUR_IN_SECONDS );
 
         $host = (string) ( wp_parse_url( $endpoint, PHP_URL_HOST ) ?: 'unparseable' );
-        error_log( sprintf(
+        hubbee_debug_log( sprintf(
             '[Hubbee ModeConfig] Rejected M2M endpoint from %s (host: %s) — not an allowed Hubbee host. Falling back to the default Supabase endpoint.',
             $source,
             $host

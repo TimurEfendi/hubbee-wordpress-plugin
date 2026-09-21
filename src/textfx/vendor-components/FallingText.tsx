@@ -72,9 +72,10 @@ const FallingText: React.FC<FallingTextProps> = ({
 
     const { Engine, Render, World, Bodies, Runner, Mouse, MouseConstraint } = Matter;
 
-    if (!containerRef.current || !canvasContainerRef.current || !textRef.current) return;
+    const container = containerRef.current;
+    if (!container || !canvasContainerRef.current || !textRef.current) return;
 
-    const containerRect = containerRef.current.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
     const width = containerRect.width;
     const height = containerRect.height;
 

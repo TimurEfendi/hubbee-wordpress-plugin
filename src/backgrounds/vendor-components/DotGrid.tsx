@@ -10,7 +10,6 @@
  * NOTE: InertiaPlugin is a GSAP premium plugin (Club GreenSock).
  */
 
-'use client';
 import { useRef, useEffect, useCallback, useMemo } from 'react';
 import { gsap } from 'gsap';
 import { InertiaPlugin } from 'gsap/InertiaPlugin';
@@ -209,7 +208,10 @@ const DotGrid = ({
       pr.vy = vy;
       pr.speed = speed;
 
-      const rect = canvasRef.current!.getBoundingClientRect();
+      const canvas = canvasRef.current;
+      if (!canvas) return; // window listener can fire after unmount: ref is already
+      // nulled while the passive cleanup below has not removed the listener yet
+      const rect = canvas.getBoundingClientRect();
       pr.x = e.clientX - rect.left;
       pr.y = e.clientY - rect.top;
 
@@ -237,7 +239,9 @@ const DotGrid = ({
     };
 
     const onClick = (e: MouseEvent) => {
-      const rect = canvasRef.current!.getBoundingClientRect();
+      const canvas = canvasRef.current;
+      if (!canvas) return; // same unmount race as onMove above
+      const rect = canvas.getBoundingClientRect();
       const cx = e.clientX - rect.left;
       const cy = e.clientY - rect.top;
       for (const dot of dotsRef.current) {

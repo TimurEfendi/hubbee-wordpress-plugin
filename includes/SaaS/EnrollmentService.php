@@ -35,10 +35,14 @@ class EnrollmentService {
     /**
      * Enroll this WordPress site with the SaaS Hub
      *
-     * @param string $onboarding_token The onboarding token from SaaS dashboard.
+     * @param string $onboarding_token  The onboarding token from SaaS dashboard.
+     * @param bool   $analytics_consent Whether the site owner agreed to visitor
+     *                                  analytics on the connect screen. Written
+     *                                  verbatim to `bz_analytics_enabled` on
+     *                                  success — see enroll() body.
      * @return array|WP_Error Array with site_id on success, WP_Error on failure.
      */
-    public function enroll( string $onboarding_token ): array|WP_Error {
+    public function enroll( string $onboarding_token, bool $analytics_consent = true ): array|WP_Error {
         if ( empty( $onboarding_token ) ) {
             return new WP_Error(
                 'bz_empty_token',
@@ -115,6 +119,14 @@ class EnrollmentService {
             $data['site_name'] ?? ''
         );
 
+        // Record the owner's visitor-analytics decision from the connect screen.
+        // Writing it unconditionally — on both yes and no — is the point: before
+        // 2.2.0 the option stayed unset on a normal enrollment, and the readers
+        // disagreed about what "unset" meant (Tracker assumed on, the settings
+        // snapshot reported off), so the dashboard could claim analytics was off
+        // while the tracker was running. There is no implicit state any more.
+        update_option( 'bz_analytics_enabled', $analytics_consent ? 1 : 0 );
+
         // Persist the M2M API endpoint when SaaS pins one in the enroll response.
         // ModeConfig::get_m2m_api_url() reads `bz_m2m_api_endpoint` to route
         // heartbeat / site-commands / command-result / event-receiver to the
@@ -131,7 +143,7 @@ class EnrollmentService {
                 update_option( 'bz_m2m_api_endpoint', $endpoint );
             } else {
                 delete_option( 'bz_m2m_api_endpoint' );
-                error_log( sprintf(
+                hubbee_debug_log( sprintf(
                     '[Hubbee Enrollment] Ignored disallowed m2m_api_endpoint host: %s',
                     (string) ( wp_parse_url( $endpoint, PHP_URL_HOST ) ?: 'unparseable' )
                 ) );

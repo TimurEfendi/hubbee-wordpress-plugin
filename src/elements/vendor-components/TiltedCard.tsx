@@ -60,9 +60,10 @@ export default function TiltedCard({
   const [lastY, setLastY] = useState(0);
 
   function handleMouse(e: React.MouseEvent) {
-    if (!ref.current) return;
+    const el = ref.current;
+    if (!el) return;
 
-    const rect = ref.current.getBoundingClientRect();
+    const rect = el.getBoundingClientRect();
     const offsetX = e.clientX - rect.left - rect.width / 2;
     const offsetY = e.clientY - rect.top - rect.height / 2;
 

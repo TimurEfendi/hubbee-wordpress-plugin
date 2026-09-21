@@ -157,14 +157,22 @@ class AdminController {
             wp_send_json_error( [ 'message' => __( 'Permission denied.', 'hubbee' ) ] );
         }
 
-        $token = sanitize_text_field( $_POST['onboarding_token'] ?? '' );
+        $token = sanitize_text_field( wp_unslash( $_POST['onboarding_token'] ?? '' ) );
 
         if ( empty( $token ) ) {
             wp_send_json_error( [ 'message' => __( 'Onboarding token is required.', 'hubbee' ) ] );
         }
 
+        // Visitor-analytics consent from the checkbox on the connect screen.
+        // Absent (older cached admin.js) means the owner never saw the choice,
+        // so fall back to the documented default rather than silently opting
+        // them out of a feature the dashboard expects to be available.
+        $analytics_consent = isset( $_POST['analytics_consent'] )
+            ? '1' === sanitize_text_field( wp_unslash( $_POST['analytics_consent'] ) )
+            : true;
+
         $enrollment = new \Hubbee\SaaS\EnrollmentService();
-        $result = $enrollment->enroll( $token );
+        $result = $enrollment->enroll( $token, $analytics_consent );
 
         if ( is_wp_error( $result ) ) {
             wp_send_json_error( [ 'message' => $result->get_error_message() ] );

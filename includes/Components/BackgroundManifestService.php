@@ -245,7 +245,7 @@ class BackgroundManifestService {
     private function log_debug( string $message ): void {
         if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
             // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-            error_log( '[Hubbee:BgManifest] ' . $message );
+            hubbee_debug_log( '[Hubbee:BgManifest] ' . $message );
         }
     }
 }

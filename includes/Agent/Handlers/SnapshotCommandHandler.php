@@ -124,7 +124,7 @@ class SnapshotCommandHandler implements CommandHandler {
             'php_version'        => phpversion(),
             'php_sapi'           => php_sapi_name(),
             'mysql_version'      => $wpdb->db_version(),
-            'server_software'    => $_SERVER['SERVER_SOFTWARE'] ?? 'unknown',
+            'server_software'    => isset( $_SERVER['SERVER_SOFTWARE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ) ) : 'unknown',
             'is_multisite'       => is_multisite(),
             'is_ssl'             => is_ssl(),
             'locale'             => get_locale(),

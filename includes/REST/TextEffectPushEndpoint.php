@@ -286,7 +286,7 @@ class TextEffectPushEndpoint extends RestEndpoint {
         // A10: SSRF guard — chunk_url must point at a Hubbee-controlled host (https, no private IPs).
         if ( ! ModeConfig::get_instance()->is_allowed_m2m_host( $chunk_url ) ) {
             // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-            error_log( sprintf( '[Hubbee][TextEffectPush] Rejected chunk_url (host not allowed): %s', esc_url_raw( $chunk_url ) ) );
+            hubbee_debug_log( sprintf( '[Hubbee][TextEffectPush] Rejected chunk_url (host not allowed): %s', esc_url_raw( $chunk_url ) ) );
             return false;
         }
 
@@ -314,7 +314,7 @@ class TextEffectPushEndpoint extends RestEndpoint {
 
         if ( is_wp_error( $response ) ) {
             // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-            error_log(
+            hubbee_debug_log(
                 sprintf(
                     '[Hubbee][TextEffectPush] Chunk download failed for tx-%s (transport error): %s — url=%s',
                     $safe_type,
@@ -328,7 +328,7 @@ class TextEffectPushEndpoint extends RestEndpoint {
         $status_code = (int) wp_remote_retrieve_response_code( $response );
         if ( 200 !== $status_code ) {
             // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-            error_log(
+            hubbee_debug_log(
                 sprintf(
                     '[Hubbee][TextEffectPush] Chunk download for tx-%s returned HTTP %d — url=%s',
                     $safe_type,
@@ -342,7 +342,7 @@ class TextEffectPushEndpoint extends RestEndpoint {
         $body = wp_remote_retrieve_body( $response );
         if ( empty( $body ) ) {
             // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-            error_log(
+            hubbee_debug_log(
                 sprintf(
                     '[Hubbee][TextEffectPush] Chunk download for tx-%s returned an empty body — url=%s',
                     $safe_type,
@@ -357,7 +357,7 @@ class TextEffectPushEndpoint extends RestEndpoint {
         $written = ChunkManager::write_chunk_atomic( $chunk_file, $body, $chunk_hash ?? '' );
         if ( is_wp_error( $written ) ) {
             // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-            error_log(
+            hubbee_debug_log(
                 sprintf(
                     '[Hubbee][TextEffectPush] Chunk write failed for tx-%s: %s — url=%s',
                     $safe_type,

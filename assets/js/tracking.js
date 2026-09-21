@@ -77,19 +77,12 @@
     }
   }
 
-  // Track if this is a bounce (single page visit)
-  var pageViewCount = parseInt(sessionStorage.getItem('bz_pageviews') || '0', 10);
-  pageViewCount++;
-  sessionStorage.setItem('bz_pageviews', pageViewCount.toString());
-
-  var isBounce = pageViewCount === 1;
-
-  // Prepare page view data
+  // Prepare page view data. Bounce state is derived server-side from the
+  // session_hash (a session with a single pageview is a bounce).
   var source = getTrafficSource();
   var pageViewData = {
     path: window.location.pathname,
     session_hash: getSessionHash(),
-    is_bounce: isBounce,
     referrer_domain: source.domain,
     source_type: source.type,
     user_agent: navigator.userAgent
@@ -124,8 +117,19 @@
   // measurement artifact (throttled/background tab) and is dropped.
   var LCP_SANITY_MAX_MS = 120000;
 
+  // A pageview must be reported exactly once. Both exit signals below
+  // (visibilitychange→hidden and pagehide) can fire for the same navigation —
+  // without this guard every tab switch would re-send the same pageview and
+  // inflate all counters.
+  var analyticsSent = false;
+
   // Send data to endpoint
   function sendAnalytics() {
+    if (analyticsSent) {
+      return;
+    }
+    analyticsSent = true;
+
     var payload = {
       page_views: [pageViewData],
       web_vitals: []
@@ -230,26 +234,20 @@
     }
   }
 
-  // Update bounce status before page unload
-  function updateBounceStatus() {
-    var currentCount = parseInt(sessionStorage.getItem('bz_pageviews') || '1', 10);
-    pageViewData.is_bounce = currentCount === 1;
-  }
-
   // Initialize
   observeWebVitals();
 
-  // Send on page visibility change (user leaving/switching tabs)
+  // Primary exit signal: page becomes hidden (tab switch, navigation, close).
+  // This is the most reliable signal on mobile, where unload events may never fire.
   document.addEventListener('visibilitychange', function() {
     if (document.visibilityState === 'hidden') {
-      updateBounceStatus();
       sendAnalytics();
     }
   });
 
-  // Fallback: send on beforeunload
-  window.addEventListener('beforeunload', function() {
-    updateBounceStatus();
+  // Fallback for browsers that unload without a visibilitychange (pagehide is
+  // more reliable than beforeunload and fires on bfcache navigations too).
+  window.addEventListener('pagehide', function() {
     sendAnalytics();
   });
 

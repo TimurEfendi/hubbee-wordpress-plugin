@@ -195,7 +195,7 @@ class ComponentPushEndpoint extends RestEndpoint {
         // no private/reserved/metadata IPs) — the same allowlist used for the M2M endpoint.
         if ( ! ModeConfig::get_instance()->is_allowed_m2m_host( $chunk_url ) ) {
             // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-            error_log( sprintf( '[Hubbee][ComponentPush] Rejected chunk_url (host not allowed): %s', esc_url_raw( $chunk_url ) ) );
+            hubbee_debug_log( sprintf( '[Hubbee][ComponentPush] Rejected chunk_url (host not allowed): %s', esc_url_raw( $chunk_url ) ) );
             return [ 'downloaded' => false, 'hash_match' => null ];
         }
 
@@ -237,7 +237,7 @@ class ComponentPushEndpoint extends RestEndpoint {
 
         if ( is_wp_error( $response ) ) {
             // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-            error_log(
+            hubbee_debug_log(
                 sprintf(
                     '[Hubbee][ComponentPush] Chunk download failed for el-%s (transport error): %s — url=%s',
                     $safe_type,
@@ -251,7 +251,7 @@ class ComponentPushEndpoint extends RestEndpoint {
         $status_code = (int) wp_remote_retrieve_response_code( $response );
         if ( 200 !== $status_code ) {
             // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-            error_log(
+            hubbee_debug_log(
                 sprintf(
                     '[Hubbee][ComponentPush] Chunk download for el-%s returned HTTP %d — url=%s',
                     $safe_type,
@@ -265,7 +265,7 @@ class ComponentPushEndpoint extends RestEndpoint {
         $body = wp_remote_retrieve_body( $response );
         if ( '' === $body ) {
             // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-            error_log(
+            hubbee_debug_log(
                 sprintf(
                     '[Hubbee][ComponentPush] Chunk download for el-%s returned an empty body — url=%s',
                     $safe_type,
@@ -280,7 +280,7 @@ class ComponentPushEndpoint extends RestEndpoint {
         $written = ChunkManager::write_chunk_atomic( $chunk_file, $body, $chunk_hash );
         if ( is_wp_error( $written ) ) {
             // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-            error_log(
+            hubbee_debug_log(
                 sprintf(
                     '[Hubbee][ComponentPush] Chunk write failed for el-%s: %s — url=%s',
                     $safe_type,

@@ -132,7 +132,7 @@ function init(): void {
         if (node.nodeType !== 1) continue;
         const el = node as HTMLElement;
         if (el.matches?.(SELECTOR)) io.observe(el);
-        if (el.querySelectorAll) observeAll(el);
+        observeAll(el);
       }
     }
   });

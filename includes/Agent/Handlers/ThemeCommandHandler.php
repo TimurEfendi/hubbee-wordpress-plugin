@@ -67,6 +67,7 @@ class ThemeCommandHandler implements CommandHandler {
         if ( ! $theme_obj->exists() ) {
             return new WP_Error(
                 'bz_theme_not_found',
+                /* translators: %s: theme slug */
                 sprintf( __( 'Theme not found: %s', 'hubbee' ), $theme )
             );
         }
@@ -96,6 +97,7 @@ class ThemeCommandHandler implements CommandHandler {
         if ( ! $theme->exists() ) {
             return new WP_Error(
                 'bz_theme_not_found',
+                /* translators: %s: theme slug */
                 sprintf( __( 'Theme not found: %s', 'hubbee' ), $slug )
             );
         }
@@ -160,6 +162,7 @@ class ThemeCommandHandler implements CommandHandler {
         if ( is_wp_error( $api ) ) {
             return new WP_Error(
                 'bz_theme_api_error',
+                /* translators: %s: theme slug */
                 sprintf( __( 'Theme "%s" not found on WordPress.org.', 'hubbee' ), $slug )
             );
         }
@@ -214,6 +217,7 @@ class ThemeCommandHandler implements CommandHandler {
         if ( ! $theme->exists() ) {
             return new WP_Error(
                 'bz_theme_not_found',
+                /* translators: %s: theme slug */
                 sprintf( __( 'Theme not found: %s', 'hubbee' ), $slug )
             );
         }
@@ -246,6 +250,7 @@ class ThemeCommandHandler implements CommandHandler {
         if ( false === $result ) {
             return new WP_Error(
                 'bz_theme_update_failed',
+                /* translators: %s: theme name */
                 sprintf( __( 'Theme update failed: %s', 'hubbee' ), $theme_name )
             );
         }
@@ -284,6 +289,7 @@ class ThemeCommandHandler implements CommandHandler {
         if ( ! $theme->exists() ) {
             return new WP_Error(
                 'bz_theme_not_found',
+                /* translators: %s: theme slug */
                 sprintf( __( 'Theme not found: %s', 'hubbee' ), $slug )
             );
         }
@@ -309,6 +315,7 @@ class ThemeCommandHandler implements CommandHandler {
         if ( is_wp_error( $deleted ) ) {
             return new WP_Error(
                 'bz_theme_delete_failed',
+                /* translators: %s: error message */
                 sprintf( __( 'Theme deletion failed: %s', 'hubbee' ), $deleted->get_error_message() )
             );
         }

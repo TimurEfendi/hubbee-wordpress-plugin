@@ -87,8 +87,9 @@ const TextPressure: React.FC<TextPressureProps> = ({
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('touchmove', handleTouchMove, { passive: true });
 
-    if (containerRef.current) {
-      const { left, top, width: w, height: h } = containerRef.current.getBoundingClientRect();
+    const container = containerRef.current;
+    if (container) {
+      const { left, top, width: w, height: h } = container.getBoundingClientRect();
       mouseRef.current.x = left + w / 2;
       mouseRef.current.y = top + h / 2;
       cursorRef.current.x = mouseRef.current.x;
@@ -103,9 +104,10 @@ const TextPressure: React.FC<TextPressureProps> = ({
 
   // Responsive font sizing
   const setSize = useCallback(() => {
-    if (!containerRef.current || !titleRef.current) return;
+    const container = containerRef.current;
+    if (!container || !titleRef.current) return;
 
-    const { width: containerW, height: containerH } = containerRef.current.getBoundingClientRect();
+    const { width: containerW, height: containerH } = container.getBoundingClientRect();
 
     let newFontSize: number;
     if (fixedFontSize) {
@@ -120,8 +122,9 @@ const TextPressure: React.FC<TextPressureProps> = ({
     setLineHeight(1);
 
     requestAnimationFrame(() => {
-      if (!titleRef.current) return;
-      const textRect = titleRef.current.getBoundingClientRect();
+      const title = titleRef.current;
+      if (!title) return;
+      const textRect = title.getBoundingClientRect();
 
       if (scale && textRect.height > 0) {
         const yRatio = containerH / textRect.height;
@@ -153,8 +156,9 @@ const TextPressure: React.FC<TextPressureProps> = ({
       mouseRef.current.x += (cursorRef.current.x - mouseRef.current.x) / 15;
       mouseRef.current.y += (cursorRef.current.y - mouseRef.current.y) / 15;
 
-      if (titleRef.current) {
-        const titleRect = titleRef.current.getBoundingClientRect();
+      const title = titleRef.current;
+      if (title) {
+        const titleRect = title.getBoundingClientRect();
         const maxDist = titleRect.width / 2;
 
         spansRef.current.forEach((span) => {

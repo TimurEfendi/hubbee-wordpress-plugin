@@ -1,400 +1,1451 @@
-# Copyright (C) 2024 Hubbee
-# This file is distributed under the GPL-2.0+.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR 2BrandsMedia
+# This file is distributed under the same license as the Hubbee package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Hubbee 2.0.0\n"
+"Project-Id-Version: Hubbee\n"
 "Report-Msgid-Bugs-To: https://hubbee.io/support\n"
-"POT-Creation-Date: 2024-01-15T10:00:00+00:00\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-07-10 10:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: hubbee.php
-msgid "Hubbee requires PHP 7.4 or higher."
+#: hubbee.php:47
+#, php-format
+msgid ""
+"Hubbee requires PHP 8.1 or newer. Your server is running PHP %s. The plugin "
+"has been disabled to prevent errors. Please update PHP and try again."
 msgstr ""
 
-#: includes/Admin/MenuBuilder.php
-msgid "Hubbee"
+#: includes/Core/UploadsCors.php:128
+msgid ""
+"Your server uses Nginx. To enable CORS for images (required for the gallery "
+"component), add this to your Nginx config:"
 msgstr ""
 
-#: includes/Admin/MenuBuilder.php
-msgid "Dashboard"
+#: includes/Security/Authenticator.php:34
+#: includes/Security/Authenticator.php:60
+msgid "Site is not connected to Hubbee. Please connect your site first."
 msgstr ""
 
-#: includes/Admin/MenuBuilder.php
-msgid "Tokens"
+#: includes/Security/Authenticator.php:71
+msgid "Missing or invalid Authorization header. Expected: Bearer <token>"
 msgstr ""
 
-#: includes/Admin/MenuBuilder.php
-msgid "Settings"
+#: includes/Security/Authenticator.php:84
+msgid "Site is not properly configured. Missing API secret."
 msgstr ""
 
-#: includes/Admin/Pages/DashboardPage.php
-msgid "Hubbee Dashboard"
+#: includes/Security/Authenticator.php:93
+msgid "Invalid authorization token."
 msgstr ""
 
-#: includes/Admin/Pages/DashboardPage.php
-msgid "Connection Status"
+#: includes/Health/CronResilience.php:184
+msgid "Hubbee: WP-Cron is disabled on this site."
 msgstr ""
 
-#: includes/Admin/Pages/DashboardPage.php
-msgid "Connected to Hubbee"
+#: includes/Health/CronResilience.php:185
+msgid ""
+"Heartbeats, health reports and command polling rely on scheduled tasks. With "
+"WP-Cron disabled they only run when a visitor loads a page, which can leave "
+"this site marked offline during quiet periods."
 msgstr ""
 
-#: includes/Admin/Pages/DashboardPage.php
-msgid "Not Connected"
+#: includes/Health/CronResilience.php:191
+#, php-format
+msgid ""
+"Recommended: add a real server cron that requests %s every few minutes. "
+"Hubbee also runs a lightweight fallback automatically, but a server cron is "
+"more reliable."
 msgstr ""
 
-#: includes/Admin/Pages/DashboardPage.php
-msgid "Enrolled: %s"
+#: includes/Health/HealthReporter.php:101
+msgid "Health reporting is disabled via filter."
 msgstr ""
 
-#: includes/Admin/Pages/DashboardPage.php
-msgid "Connect Now"
+#: includes/Health/HealthReporter.php:108
+#: includes/REST/AnalyticsEndpoint.php:117
+msgid "Not connected to Hubbee SaaS."
 msgstr ""
 
-#: includes/Admin/Pages/DashboardPage.php
-msgid "Token Statistics"
+#: includes/Health/HealthReporter.php:265
+msgid "High memory usage"
 msgstr ""
 
-#: includes/Admin/Pages/DashboardPage.php
-msgid "Tokens Stored"
+#: includes/Health/HealthReporter.php:273
+msgid "Disk almost full"
 msgstr ""
 
-#: includes/Admin/Pages/DashboardPage.php
-msgid "View All Tokens"
+#: includes/Health/HealthReporter.php:286
+#, php-format
+msgid "WordPress update available: %s"
 msgstr ""
 
-#: includes/Admin/Pages/DashboardPage.php
-msgid "Last Sync"
+#: includes/Health/HealthReporter.php:299
+#, php-format
+msgid "PHP %s - update to 8.0+ recommended"
 msgstr ""
 
-#: includes/Admin/Pages/DashboardPage.php
-msgid "Last token update received from Hubbee"
-msgstr ""
-
-#: includes/Admin/Pages/DashboardPage.php
-msgid "No sync yet"
-msgstr ""
-
-#: includes/Admin/Pages/DashboardPage.php
-msgid "Tokens will be synced when you publish from the Hubbee dashboard."
-msgstr ""
-
-#: includes/Admin/Pages/DashboardPage.php
-msgid "Site Information"
-msgstr ""
-
-#: includes/Admin/Pages/DashboardPage.php
-msgid "Site ID"
-msgstr ""
-
-#: includes/Admin/Pages/DashboardPage.php
-msgid "Hubbee Site ID"
-msgstr ""
-
-#: includes/Admin/Pages/DashboardPage.php
-msgid "REST URL"
-msgstr ""
-
-#: includes/Admin/Pages/DashboardPage.php
-msgid "Plugin Version"
-msgstr ""
-
-#: includes/Admin/Pages/DashboardPage.php
-msgid "Quick Links"
-msgstr ""
-
-#: includes/Admin/Pages/DashboardPage.php
-msgid "Browse Tokens"
-msgstr ""
-
-#: includes/Admin/Pages/DashboardPage.php
-msgid "Elementor Templates"
-msgstr ""
-
-#: includes/Admin/Pages/SettingsPage.php
-msgid "You do not have permission to access this page."
-msgstr ""
-
-#: includes/Admin/Pages/SettingsPage.php
-msgid "Hubbee Settings"
-msgstr ""
-
-#: includes/Admin/Pages/SettingsPage.php
-msgid "SaaS Connection"
-msgstr ""
-
-#: includes/Admin/Pages/SettingsPage.php
-msgid "Site ID: %s"
-msgstr ""
-
-#: includes/Admin/Pages/SettingsPage.php
-msgid "Connected since: %s"
-msgstr ""
-
-#: includes/Admin/Pages/SettingsPage.php
-msgid "Disconnect"
-msgstr ""
-
-#: includes/Admin/Pages/SettingsPage.php
-msgid "Connect your site to Hubbee to receive token updates."
-msgstr ""
-
-#: includes/Admin/Pages/SettingsPage.php
-msgid "Connect to Hubbee"
-msgstr ""
-
-#: includes/Admin/Pages/SettingsPage.php
-msgid "Enter your onboarding token from the Hubbee dashboard to connect this site."
-msgstr ""
-
-#: includes/Admin/Pages/SettingsPage.php
-msgid "Onboarding Token"
-msgstr ""
-
-#: includes/Admin/Pages/SettingsPage.php
-msgid "Get this token from your Hubbee dashboard under \"Sites\" > \"Add Site\"."
-msgstr ""
-
-#: includes/Admin/Pages/SettingsPage.php
-msgid "Connect"
-msgstr ""
-
-#: includes/Admin/Pages/SettingsPage.php
-msgid "Advanced Settings"
-msgstr ""
-
-#: includes/Admin/Pages/SettingsPage.php
-msgid "SaaS Endpoint"
-msgstr ""
-
-#: includes/Admin/Pages/SettingsPage.php
-msgid "The Hubbee SaaS endpoint URL. Only change this if instructed."
-msgstr ""
-
-#: includes/Admin/Pages/SettingsPage.php
-msgid "Local Site ID"
-msgstr ""
-
-#: includes/Admin/Pages/SettingsPage.php
-msgid "REST API URL"
-msgstr ""
-
-#: includes/Admin/Pages/SettingsPage.php
-msgid "Never"
-msgstr ""
-
-#: includes/Admin/Pages/TokenBrowserPage.php
-msgid "Browse tokens synced from Hubbee. Use these tokens in Elementor via Dynamic Tags."
-msgstr ""
-
-#: includes/Admin/Pages/TokenBrowserPage.php
-msgid "All Sections"
-msgstr ""
-
-#: includes/Admin/Pages/TokenBrowserPage.php
-msgid "Default Locale"
-msgstr ""
-
-#: includes/Admin/Pages/TokenBrowserPage.php
-msgid "Search tokens..."
-msgstr ""
-
-#: includes/Admin/Pages/TokenBrowserPage.php
-msgid "Filter"
-msgstr ""
-
-#: includes/Admin/Pages/TokenBrowserPage.php
-msgid "Clear"
-msgstr ""
-
-#: includes/Admin/Pages/TokenBrowserPage.php
-msgid "No tokens found."
-msgstr ""
-
-#: includes/Admin/Pages/TokenBrowserPage.php
-msgid "Tokens will appear here after you publish content from the Hubbee dashboard."
-msgstr ""
-
-#: includes/Admin/Pages/TokenBrowserPage.php
-msgid "Key"
-msgstr ""
-
-#: includes/Admin/Pages/TokenBrowserPage.php
-msgid "Label"
-msgstr ""
-
-#: includes/Admin/Pages/TokenBrowserPage.php
-msgid "Value"
-msgstr ""
-
-#: includes/Admin/Pages/TokenBrowserPage.php
-msgid "Type"
-msgstr ""
-
-#: includes/Admin/Pages/TokenBrowserPage.php
-msgid "Section"
-msgstr ""
-
-#: includes/Admin/Pages/TokenBrowserPage.php
-msgid "Locale"
-msgstr ""
-
-#: includes/Admin/Pages/TokenBrowserPage.php
-msgid "Version"
-msgstr ""
-
-#: includes/Admin/Pages/TokenBrowserPage.php
-msgid "Default"
-msgstr ""
-
-#. translators: %d: number of tokens
-#: includes/Admin/Pages/TokenBrowserPage.php
-msgid "%d token"
-msgid_plural "%d tokens"
+#: includes/Health/HealthReporter.php:338
+#, php-format
+msgid "%d plugin update available"
+msgid_plural "%d plugin updates available"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/Admin/AssetManager.php
+#: includes/Health/HealthReporter.php:370
+#, php-format
+msgid "%d theme update available"
+msgid_plural "%d theme updates available"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/Health/HealthReporter.php:404
+#, php-format
+msgid "Health Report (%1$s) failed: %2$s"
+msgstr ""
+
+#: includes/Admin/AdminController.php:68
+msgid "Hubbee activated!"
+msgstr ""
+
+#: includes/Admin/AdminController.php:72
+#, php-format
+msgid "Connect your site to Hubbee in the %s."
+msgstr ""
+
+#: includes/Admin/AdminController.php:73 includes/Admin/AdminController.php:144
+msgid "Settings"
+msgstr ""
+
+#: includes/Admin/AdminController.php:87
+msgid "Hubbee connection reset"
+msgstr ""
+
+#: includes/Admin/AdminController.php:88
+msgid "The plugin was copied to a new installation. Please reconnect the site."
+msgstr ""
+
+#: includes/Admin/AdminController.php:90
+msgid "Connect now"
+msgstr ""
+
+#: includes/Admin/AdminController.php:106
+msgid "Hubbee plugin update required"
+msgstr ""
+
+#: includes/Admin/AdminController.php:110
+#, php-format
+msgid ""
+"This site runs Hubbee %1$s, but the Hubbee Cloud now requires at least %2$s. "
+"Please update the plugin to avoid losing functionality."
+msgstr ""
+
+#: includes/Admin/AdminController.php:127
+msgid "Elementor not detected."
+msgstr ""
+
+#: includes/Admin/AdminController.php:128
+msgid "Hubbee Dynamic Tags require an active Elementor plugin."
+msgstr ""
+
+#: includes/Admin/AdminController.php:157
+#: includes/Admin/AdminController.php:183
+#: includes/Admin/AdminController.php:199
+msgid "Permission denied."
+msgstr ""
+
+#: includes/Admin/AdminController.php:163
+#: includes/SaaS/EnrollmentService.php:45 includes/REST/EnrollEndpoint.php:57
+msgid "Onboarding token is required."
+msgstr ""
+
+#: includes/Admin/AssetManager.php:48
 msgid "Connecting..."
 msgstr ""
 
-#: includes/Admin/AssetManager.php
+#: includes/Admin/AssetManager.php:49
 msgid "Connected successfully!"
 msgstr ""
 
-#: includes/Admin/AssetManager.php
+#: includes/Admin/AssetManager.php:50
 msgid "Disconnected"
 msgstr ""
 
-#: includes/Admin/AssetManager.php
+#: includes/Admin/AssetManager.php:51
 msgid "An error occurred. Please try again."
 msgstr ""
 
-#: includes/Admin/AssetManager.php
+#: includes/Admin/AssetManager.php:52
 msgid "Please enter an onboarding token."
 msgstr ""
 
-#: includes/Admin/AssetManager.php
+#: includes/Admin/AssetManager.php:53
 msgid "Connection failed."
 msgstr ""
 
-#: includes/Admin/AssetManager.php
+#: includes/Admin/AssetManager.php:54
 msgid "Disconnect failed."
 msgstr ""
 
-#: includes/Admin/AssetManager.php
-msgid "Are you sure you want to disconnect from Hubbee? Your tokens will remain stored locally."
+#: includes/Admin/AssetManager.php:55
+msgid ""
+"Are you sure you want to disconnect from Hubbee? Your tokens will remain "
+"stored locally."
 msgstr ""
 
-#: includes/Admin/AssetManager.php
-msgid "Copied!"
+#: includes/Admin/AssetManager.php:56
+msgid "Saved!"
 msgstr ""
 
-#: includes/Elementor/ElementorManager.php
+#: includes/Admin/MenuBuilder.php:31 includes/Admin/MenuBuilder.php:32
+#: includes/Elementor/ElementorManager.php:78
 msgid "Hubbee"
 msgstr ""
 
-#: includes/Elementor/TextTokenTag.php
-msgid "Text Token"
+#: includes/Agent/CommandExecutor.php:83
+#, php-format
+msgid "Unknown command type: %s"
 msgstr ""
 
-#: includes/Elementor/TextTokenTag.php
+#: includes/Agent/CommandExecutor.php:109
+msgid "No commands in batch."
+msgstr ""
+
+#: includes/Agent/CommandExecutor.php:113
+msgid "Maximum 50 commands per batch."
+msgstr ""
+
+#: includes/Agent/CommandExecutor.php:132
+#, php-format
+msgid "Invalid batch command type at index %1$d: %2$s"
+msgstr ""
+
+#: includes/Agent/CommandPoller.php:134
+#, php-format
+msgid "Every %d seconds (Hubbee Poll)"
+msgstr ""
+
+#: includes/Agent/CommandPoller.php:150 includes/Agent/EventPusher.php:156
+msgid "Not connected to SaaS."
+msgstr ""
+
+#: includes/Agent/CommandPoller.php:156 includes/Agent/CommandPoller.php:286
+msgid "JWT generation failed."
+msgstr ""
+
+#: includes/Agent/CommandPoller.php:204
+msgid "Polling paused after 3x 401."
+msgstr ""
+
+#: includes/Agent/CommandPoller.php:210 includes/Agent/EventPusher.php:226
+#, php-format
+msgid "HTTP %d"
+msgstr ""
+
+#: includes/Agent/CommandPoller.php:338
+msgid "Result report failed."
+msgstr ""
+
+#: includes/Agent/CommandPoller.php:545
+msgid "No pending commands."
+msgstr ""
+
+#: includes/Agent/CommandPoller.php:567
+#, php-format
+msgid "%d commands executed."
+msgstr ""
+
+#: includes/Agent/EventPusher.php:161
+msgid "Event Push is disabled."
+msgstr ""
+
+#: includes/Agent/EventPusher.php:169
+msgid "Credentials are missing."
+msgstr ""
+
+#: includes/Agent/PushHandler.php:68
+msgid ""
+"Invalid payload: tokens, deleted_tokens, expected_external_keys, "
+"expected_keys, or keys_checksum is required."
+msgstr ""
+
+#: includes/Agent/PushHandler.php:274
+msgid "Token key is required."
+msgstr ""
+
+#: includes/Agent/PushHandler.php:282
+#: includes/Agent/ComponentPushHandler.php:244
+msgid "Valid version number is required."
+msgstr ""
+
+#: includes/Agent/PushHandler.php:330
+msgid "Failed to save token."
+msgstr ""
+
+#: includes/Agent/PushHandler.php:361
+msgid ""
+"Payload must contain tokens, deleted_tokens, expected_external_keys, or "
+"expected_keys."
+msgstr ""
+
+#: includes/Agent/PushHandler.php:374
+#, php-format
+msgid "Token at index %d is missing required \"key\" field."
+msgstr ""
+
+#: includes/Agent/PushHandler.php:386
+#, php-format
+msgid "Token at index %d has invalid version."
+msgstr ""
+
+#: includes/Agent/PushHandler.php:403
+#, php-format
+msgid "Deletion at index %d is missing required \"key\" field."
+msgstr ""
+
+#: includes/Agent/AgentManager.php:181
+msgid "Not connected to Hubbee. Connect your site to receive token updates."
+msgstr ""
+
+#: includes/Agent/AgentManager.php:189
+msgid "REST API is not available. Hubbee requires the WordPress REST API."
+msgstr ""
+
+#: includes/Agent/AgentManager.php:197
+msgid ""
+"Pretty permalinks are not enabled. REST API will use query string format."
+msgstr ""
+
+#: includes/Agent/AgentManager.php:205
+msgid "HTTPS is recommended for secure communication with Hubbee."
+msgstr ""
+
+#: includes/Agent/ComponentPushHandler.php:46
+msgid "Invalid payload: component or deleted_components is required."
+msgstr ""
+
+#: includes/Agent/ComponentPushHandler.php:236
+msgid "Component slug is required."
+msgstr ""
+
+#: includes/Agent/ComponentPushHandler.php:288
+msgid "Failed to save component."
+msgstr ""
+
+#: includes/Agent/ComponentPushHandler.php:317
+msgid "Payload must contain component or deleted_components."
+msgstr ""
+
+#: includes/Agent/ComponentPushHandler.php:329
+msgid "Component is missing required \"slug\" field."
+msgstr ""
+
+#: includes/Agent/ComponentPushHandler.php:337
+msgid "Component has invalid version."
+msgstr ""
+
+#: includes/Agent/ComponentPushHandler.php:345
+msgid "Component is missing required \"config\" field."
+msgstr ""
+
+#: includes/Agent/ComponentPushHandler.php:359
+#, php-format
+msgid "Deletion at index %d is missing required \"slug\" field."
+msgstr ""
+
+#: includes/Elementor/TextTokenTag.php:36
+msgid "Text"
+msgstr ""
+
+#: includes/Elementor/TextTokenTag.php:76
 msgid "Token"
 msgstr ""
 
-#: includes/Elementor/TextTokenTag.php
+#: includes/Elementor/TextTokenTag.php:81
 msgid "Select the token to display."
 msgstr ""
 
-#: includes/Elementor/TextTokenTag.php
+#: includes/Elementor/TextTokenTag.php:88
 msgid "Locale Override"
 msgstr ""
 
-#: includes/Elementor/TextTokenTag.php
+#: includes/Elementor/TextTokenTag.php:91
 msgid "auto"
 msgstr ""
 
-#: includes/Elementor/TextTokenTag.php
+#: includes/Elementor/TextTokenTag.php:92
 msgid "Leave empty for auto-detection based on site language."
 msgstr ""
 
-#: includes/Elementor/TextTokenTag.php
+#: includes/Elementor/TextTokenTag.php:99
+#: includes/Elementor/ExternalTextTag.php:92
 msgid "Fallback Value"
 msgstr ""
 
-#: includes/Elementor/TextTokenTag.php
+#: includes/Elementor/TextTokenTag.php:102
+#: includes/Elementor/ExternalTextTag.php:95
 msgid "Text to display if token is empty or not found."
 msgstr ""
 
-#: includes/Elementor/TextTokenTag.php
+#: includes/Elementor/TextTokenTag.php:116
 msgid "Select a token"
 msgstr ""
 
-#: includes/Elementor/TextTokenTag.php
+#: includes/Elementor/TextTokenTag.php:138
+#: includes/Elementor/ExternalTextTag.php:127
 msgid "No value"
 msgstr ""
 
-#: includes/Elementor/TextTokenTag.php
+#: includes/Elementor/TextTokenTag.php:153
 msgid "No tokens available"
 msgstr ""
 
-#: includes/Elementor/TextTokenTag.php
+#: includes/Elementor/TextTokenTag.php:158
+#: includes/Elementor/ExternalUrlTag.php:148
+#: includes/Elementor/ExternalImageTag.php:170
+#: includes/Elementor/ExternalTextTag.php:155
 msgid "— Select Token —"
 msgstr ""
 
-#: includes/SaaS/EnrollmentService.php
-msgid "Missing onboarding token."
+#: includes/Elementor/ExternalUrlTag.php:40
+msgid "Ext. URL"
 msgstr ""
 
-#: includes/SaaS/EnrollmentService.php
-msgid "SaaS enrollment failed: %s"
+#: includes/Elementor/ExternalUrlTag.php:79
+msgid "External URL Token"
 msgstr ""
 
-#: includes/SaaS/EnrollmentService.php
-msgid "Invalid response from SaaS."
+#: includes/Elementor/ExternalUrlTag.php:84
+msgid "Select the external URL token."
 msgstr ""
 
-#: includes/SaaS/SignatureValidator.php
+#: includes/Elementor/ExternalUrlTag.php:91
+msgid "Fallback URL"
+msgstr ""
+
+#: includes/Elementor/ExternalUrlTag.php:94
+msgid "URL to use if the token is empty."
+msgstr ""
+
+#: includes/Elementor/ExternalUrlTag.php:135
+msgid "No external URL tokens available"
+msgstr ""
+
+#: includes/Elementor/ContainerBackgroundExtension.php:185
+msgid "Hubbee Background"
+msgstr ""
+
+#: includes/Elementor/ContainerBackgroundExtension.php:199
+#: includes/Elementor/ContainerBackgroundExtension.php:203
+#: includes/Elementor/TextEffectExtension.php:151
+msgid "-- None --"
+msgstr ""
+
+#: includes/Elementor/ContainerBackgroundExtension.php:211
+msgid "Background"
+msgstr ""
+
+#: includes/Elementor/ContainerBackgroundExtension.php:221
+msgid "Opacity"
+msgstr ""
+
+#: includes/Elementor/ComponentWidget.php:36
+#: includes/Elementor/ComponentWidget.php:202
+msgid "Hubbee Component"
+msgstr ""
+
+#: includes/Elementor/ComponentWidget.php:73
+msgid "Component"
+msgstr ""
+
+#: includes/Elementor/ComponentWidget.php:83
+msgid "Select Component"
+msgstr ""
+
+#: includes/Elementor/ComponentWidget.php:87
+msgid "Choose a component that has been pushed from the Hubbee SaaS."
+msgstr ""
+
+#: includes/Elementor/ComponentWidget.php:94
+msgid "Fallback Content"
+msgstr ""
+
+#: includes/Elementor/ComponentWidget.php:97
+msgid "Content to display if the component is not found."
+msgstr ""
+
+#: includes/Elementor/ComponentWidget.php:104
+msgid "Show Version Info"
+msgstr ""
+
+#: includes/Elementor/ComponentWidget.php:106
+msgid "Show"
+msgstr ""
+
+#: includes/Elementor/ComponentWidget.php:107
+msgid "Hide"
+msgstr ""
+
+#: includes/Elementor/ComponentWidget.php:110
+msgid "Display version info in admin bar for debugging."
+msgstr ""
+
+#: includes/Elementor/ComponentWidget.php:120
+msgid "Height & Overflow"
+msgstr ""
+
+#: includes/Elementor/ComponentWidget.php:128
+msgid "Height Mode"
+msgstr ""
+
+#: includes/Elementor/ComponentWidget.php:132
+#: includes/Elementor/ComponentWidget.php:163
+msgid "Auto"
+msgstr ""
+
+#: includes/Elementor/ComponentWidget.php:133
+msgid "Viewport Height (vh)"
+msgstr ""
+
+#: includes/Elementor/ComponentWidget.php:134
+msgid "Pixels (px)"
+msgstr ""
+
+#: includes/Elementor/ComponentWidget.php:135
+msgid "Rem"
+msgstr ""
+
+#: includes/Elementor/ComponentWidget.php:143
+msgid "Height Value"
+msgstr ""
+
+#: includes/Elementor/ComponentWidget.php:157
+msgid "Overflow"
+msgstr ""
+
+#: includes/Elementor/ComponentWidget.php:161
+msgid "Visible"
+msgstr ""
+
+#: includes/Elementor/ComponentWidget.php:162
+msgid "Hidden"
+msgstr ""
+
+#: includes/Elementor/ComponentWidget.php:174
+msgid "Container"
+msgstr ""
+
+#: includes/Elementor/ComponentWidget.php:182
+msgid "Additional CSS Class"
+msgstr ""
+
+#: includes/Elementor/ComponentWidget.php:185
+msgid "Add custom CSS classes to the component wrapper."
+msgstr ""
+
+#: includes/Elementor/ComponentWidget.php:203
+msgid "Select a component from the settings panel."
+msgstr ""
+
+#: includes/Elementor/ComponentWidget.php:219
+msgid "Component not found:"
+msgstr ""
+
+#: includes/Elementor/ComponentWidget.php:260
+msgid "Unknown component type:"
+msgstr ""
+
+#: includes/Elementor/ComponentWidget.php:271
+#, php-format
+msgid "Component: %1$s (v%2$d)"
+msgstr ""
+
+#: includes/Elementor/ComponentWidget.php:368
+msgid "-- Select Component --"
+msgstr ""
+
+#: includes/Elementor/TextEffectExtension.php:144
+msgid "Hubbee Text Effect"
+msgstr ""
+
+#: includes/Elementor/TextEffectExtension.php:158
+msgid "Text Effect"
+msgstr ""
+
+#: includes/Elementor/ExternalImageTag.php:40
+msgid "Ext. Image"
+msgstr ""
+
+#: includes/Elementor/ExternalImageTag.php:80
+msgid "External Image Token"
+msgstr ""
+
+#: includes/Elementor/ExternalImageTag.php:85
+msgid "Select the external image token."
+msgstr ""
+
+#: includes/Elementor/ExternalImageTag.php:92
+msgid "Fallback Image URL"
+msgstr ""
+
+#: includes/Elementor/ExternalImageTag.php:97
+msgid "Image to display if the token is empty."
+msgstr ""
+
+#: includes/Elementor/ExternalImageTag.php:157
+msgid "No external image tokens available"
+msgstr ""
+
+#: includes/Elementor/ExternalTextTag.php:40
+msgid "Ext. Text"
+msgstr ""
+
+#: includes/Elementor/ExternalTextTag.php:80
+msgid "External Token"
+msgstr ""
+
+#: includes/Elementor/ExternalTextTag.php:85
+msgid "Select the external token to display."
+msgstr ""
+
+#: includes/Elementor/ExternalTextTag.php:108
+msgid "Select an external token"
+msgstr ""
+
+#: includes/Elementor/ExternalTextTag.php:142
+msgid "No external tokens available"
+msgstr ""
+
+#: includes/Components/ChunkManager.php:52
+msgid "Upload directory is not writable."
+msgstr ""
+
+#: includes/Components/ChunkManager.php:98
+#, php-format
+msgid "Config exceeds the maximum allowed size of %1$d KB (received %2$d KB)."
+msgstr ""
+
+#: includes/Components/ChunkManager.php:142
+msgid "Refusing to write an empty chunk."
+msgstr ""
+
+#: includes/Components/ChunkManager.php:153
+msgid "Downloaded chunk failed SHA-256 integrity check."
+msgstr ""
+
+#: includes/Components/ChunkManager.php:161
+msgid "Could not create the chunks directory."
+msgstr ""
+
+#: includes/Components/ChunkManager.php:183
+msgid "Could not write the chunk temp file."
+msgstr ""
+
+#: includes/Components/ChunkManager.php:196
+msgid "Could not finalize the chunk file."
+msgstr ""
+
+#: includes/SaaS/EnrollmentService.php:88
+#, php-format
+msgid "Failed to connect to SaaS: %s"
+msgstr ""
+
+#: includes/SaaS/EnrollmentService.php:107
+msgid "Invalid response from SaaS. Missing site_id or api_secret."
+msgstr ""
+
+#: includes/SaaS/EnrollmentService.php:158
+msgid "Successfully connected to Hubbee!"
+msgstr ""
+
+#: includes/SaaS/EnrollmentService.php:172
+msgid "Disconnected from Hubbee."
+msgstr ""
+
+#: includes/SaaS/EnrollmentService.php:211
+msgid "Invalid or expired onboarding token."
+msgstr ""
+
+#: includes/SaaS/EnrollmentService.php:217
+msgid "Access denied. Please check your subscription."
+msgstr ""
+
+#: includes/SaaS/EnrollmentService.php:223
+msgid "Enrollment endpoint not found. Please check the SaaS URL."
+msgstr ""
+
+#: includes/SaaS/EnrollmentService.php:229
+msgid "This site is already enrolled."
+msgstr ""
+
+#: includes/SaaS/EnrollmentService.php:235
+msgid "Invalid site information provided."
+msgstr ""
+
+#: includes/SaaS/EnrollmentService.php:241
+#: includes/REST/ComponentStatusEndpoint.php:80
+#: includes/REST/AnalyticsEndpoint.php:95 includes/REST/PingEndpoint.php:60
+msgid "Too many requests. Please try again later."
+msgstr ""
+
+#: includes/SaaS/EnrollmentService.php:249
+msgid "SaaS server error. Please try again later."
+msgstr ""
+
+#: includes/SaaS/EnrollmentService.php:257
+#, php-format
+msgid "Enrollment failed with status code %d."
+msgstr ""
+
+#: includes/SaaS/SignatureValidator.php:56
+msgid "Site is not connected to Hubbee."
+msgstr ""
+
+#: includes/SaaS/SignatureValidator.php:70
 msgid "Missing signature header."
 msgstr ""
 
-#: includes/SaaS/SignatureValidator.php
+#: includes/SaaS/SignatureValidator.php:78
 msgid "Missing timestamp header."
 msgstr ""
 
-#: includes/SaaS/SignatureValidator.php
-msgid "Missing site ID header."
+#: includes/SaaS/SignatureValidator.php:87
+msgid "Invalid timestamp format."
 msgstr ""
 
-#: includes/SaaS/SignatureValidator.php
-msgid "Request timestamp is too old."
+#: includes/SaaS/SignatureValidator.php:102
+#, php-format
+msgid "Request timestamp is too old (%d seconds difference)."
 msgstr ""
 
-#: includes/SaaS/SignatureValidator.php
-msgid "Site is not connected to SaaS."
+#: includes/SaaS/SignatureValidator.php:115
+msgid "Site ID does not match."
 msgstr ""
 
-#: includes/SaaS/SignatureValidator.php
+#: includes/SaaS/SignatureValidator.php:131
 msgid "Invalid signature."
 msgstr ""
 
-#: includes/REST/PushEndpoint.php
-msgid "Tokens pushed successfully."
+#: includes/SaaS/ConnectionManager.php:489
+msgid "No connection configured."
 msgstr ""
 
-#: includes/REST/PushEndpoint.php
-msgid "Request has already been processed."
+#: includes/SaaS/ConnectionManager.php:525
+#, php-format
+msgid "Connection error: %s"
 msgstr ""
 
-#: includes/REST/StatusEndpoint.php
-msgid "Site status retrieved."
+#: includes/SaaS/ConnectionManager.php:538
+msgid "Connection is working."
 msgstr ""
 
-#: includes/REST/TestConnectionEndpoint.php
-msgid "Connection verified."
+#: includes/SaaS/ConnectionManager.php:543
+msgid "Authentication failed. Invalid API key."
+msgstr ""
+
+#: includes/SaaS/ConnectionManager.php:550
+#, php-format
+msgid "Connection test failed (HTTP %d)."
+msgstr ""
+
+#: includes/REST/PushEndpoint.php:48
+#: includes/REST/ComponentReconcileEndpoint.php:55
+#: includes/REST/BackgroundPushEndpoint.php:39
+#: includes/REST/ComponentPushEndpoint.php:53
+#: includes/REST/TextEffectPushEndpoint.php:38
+msgid "Request already processed (idempotent)."
+msgstr ""
+
+#: includes/REST/PushEndpoint.php:119
+msgid "Array of tokens to push."
+msgstr ""
+
+#: includes/REST/PushEndpoint.php:129
+msgid "Unique token key."
+msgstr ""
+
+#: includes/REST/PushEndpoint.php:133
+msgid "Human-readable label."
+msgstr ""
+
+#: includes/REST/PushEndpoint.php:137
+msgid "Token description."
+msgstr ""
+
+#: includes/REST/PushEndpoint.php:143
+msgid "Field type for the token."
+msgstr ""
+
+#: includes/REST/PushEndpoint.php:147
+msgid "Token value."
+msgstr ""
+
+#: includes/REST/PushEndpoint.php:152
+msgid "Locale for the token (empty for default)."
+msgstr ""
+
+#: includes/REST/PushEndpoint.php:158
+#: includes/REST/ComponentPushEndpoint.php:323
+msgid "Version number (must be higher than existing)."
+msgstr ""
+
+#: includes/REST/PushEndpoint.php:163
+msgid "Section/category for grouping."
+msgstr ""
+
+#: includes/REST/PushEndpoint.php:169
+#: includes/REST/ComponentReconcileEndpoint.php:106
+#: includes/REST/BackgroundPushEndpoint.php:387
+#: includes/REST/ComponentPushEndpoint.php:333
+#: includes/REST/TextEffectPushEndpoint.php:411
+msgid "Unique request identifier for idempotency."
+msgstr ""
+
+#: includes/REST/PushEndpoint.php:174
+msgid "Array of token keys to delete."
+msgstr ""
+
+#: includes/REST/PushEndpoint.php:184
+msgid "Token key to delete."
+msgstr ""
+
+#: includes/REST/PushEndpoint.php:190
+msgid ""
+"Array of external token keys that should exist. All ext_* tokens not in this "
+"list will be removed."
+msgstr ""
+
+#: includes/REST/PushEndpoint.php:198
+msgid ""
+"Array of regular token keys that should exist. All non-ext_* tokens not in "
+"this list will be removed (full-push reconciliation)."
+msgstr ""
+
+#: includes/REST/PushEndpoint.php:206
+msgid ""
+"SHA-256 of the expected non-external key set. On mismatch the response sets "
+"needs_reconcile=true; nothing is deleted."
+msgstr ""
+
+#: includes/REST/PushEndpoint.php:211
+msgid ""
+"Authorize reconciliation against an empty expected_keys list (delete all). "
+"Without it, an empty list is a no-op."
+msgstr ""
+
+#: includes/REST/CommandEndpoint.php:38
+msgid "Command type is required."
+msgstr ""
+
+#: includes/REST/CommandEndpoint.php:175
+msgid "Unique command identifier for tracking."
+msgstr ""
+
+#: includes/REST/CommandEndpoint.php:180
+msgid "Type of command to execute (e.g., plugin.activate)."
+msgstr ""
+
+#: includes/REST/CommandEndpoint.php:185
+msgid "Command-specific payload data."
+msgstr ""
+
+#: includes/REST/TestConnectionEndpoint.php:30
+msgid "Connection successful!"
+msgstr ""
+
+#: includes/REST/ComponentReconcileEndpoint.php:98
+msgid ""
+"Slugs of components that should remain on the site. Everything else is "
+"deleted."
+msgstr ""
+
+#: includes/REST/AnalyticsEndpoint.php:130
+#: includes/REST/AnalyticsEndpoint.php:141
+msgid "Request body exceeds the allowed size."
+msgstr ""
+
+#: includes/REST/AnalyticsEndpoint.php:149
+msgid "Empty request body."
+msgstr ""
+
+#: includes/REST/AnalyticsEndpoint.php:159
+msgid "Invalid JSON payload."
+msgstr ""
+
+#: includes/REST/BackgroundPushEndpoint.php:105
+msgid "Background data or deleted_backgrounds is required."
+msgstr ""
+
+#: includes/REST/BackgroundPushEndpoint.php:114
+msgid "Background slug is required."
+msgstr ""
+
+#: includes/REST/BackgroundPushEndpoint.php:122
+msgid "Background type (bg_type) is required."
+msgstr ""
+
+#: includes/REST/BackgroundPushEndpoint.php:130
+msgid "Background config is required."
+msgstr ""
+
+#: includes/REST/BackgroundPushEndpoint.php:156
+msgid "Failed to save background."
+msgstr ""
+
+#: includes/REST/BackgroundPushEndpoint.php:180
+#, php-format
+msgid ""
+"Background config saved but runtime chunk for \"%s\" could not be downloaded."
+msgstr ""
+
+#: includes/REST/BackgroundPushEndpoint.php:341
+msgid "Background to push."
+msgstr ""
+
+#: includes/REST/BackgroundPushEndpoint.php:348
+msgid "Unique background slug."
+msgstr ""
+
+#: includes/REST/BackgroundPushEndpoint.php:352
+msgid "Background display name."
+msgstr ""
+
+#: includes/REST/BackgroundPushEndpoint.php:357
+msgid "Background type (e.g. aurora, particles)."
+msgstr ""
+
+#: includes/REST/BackgroundPushEndpoint.php:362
+msgid "Background configuration."
+msgstr ""
+
+#: includes/REST/BackgroundPushEndpoint.php:366
+msgid "URL to download the background chunk JS."
+msgstr ""
+
+#: includes/REST/BackgroundPushEndpoint.php:370
+msgid "SHA-256 hash for cache validation."
+msgstr ""
+
+#: includes/REST/BackgroundPushEndpoint.php:375
+msgid "Backgrounds to delete."
+msgstr ""
+
+#: includes/REST/ComponentPushEndpoint.php:109
+#, php-format
+msgid ""
+"Component config saved but runtime chunk for element \"%s\" could not be "
+"downloaded."
+msgstr ""
+
+#: includes/REST/ComponentPushEndpoint.php:306
+msgid "Component to push."
+msgstr ""
+
+#: includes/REST/ComponentPushEndpoint.php:313
+msgid "Unique component slug."
+msgstr ""
+
+#: includes/REST/ComponentPushEndpoint.php:317
+msgid "Component display name."
+msgstr ""
+
+#: includes/REST/ComponentPushEndpoint.php:328
+msgid "Component configuration (sections, globalStyles)."
+msgstr ""
+
+#: includes/REST/ComponentPushEndpoint.php:338
+msgid "Array of component slugs to delete."
+msgstr ""
+
+#: includes/REST/ComponentPushEndpoint.php:348
+msgid "Component slug to delete."
+msgstr ""
+
+#: includes/REST/TextEffectPushEndpoint.php:114
+msgid "Text effect data or deleted_text_effects is required."
+msgstr ""
+
+#: includes/REST/TextEffectPushEndpoint.php:121
+msgid "Text effect slug is required."
+msgstr ""
+
+#: includes/REST/TextEffectPushEndpoint.php:125
+msgid "Effect type is required."
+msgstr ""
+
+#: includes/REST/TextEffectPushEndpoint.php:129
+msgid "Text effect config is required."
+msgstr ""
+
+#: includes/REST/TextEffectPushEndpoint.php:151
+msgid "Failed to save text effect."
+msgstr ""
+
+#: includes/REST/TextEffectPushEndpoint.php:172
+#, php-format
+msgid ""
+"Text effect config saved but runtime chunk for \"%s\" could not be "
+"downloaded."
+msgstr ""
+
+#: includes/REST/TextEffectPushEndpoint.php:380
+msgid "Text effect to push."
+msgstr ""
+
+#: includes/REST/TextEffectPushEndpoint.php:393
+msgid "Text effects to delete."
+msgstr ""
+
+#: includes/REST/TextEffectPushEndpoint.php:405
+msgid "All valid text effect slugs for this site (for reconciliation)."
+msgstr ""
+
+#: includes/REST/EnrollEndpoint.php:38
+msgid "You do not have permission to perform this action."
+msgstr ""
+
+#: includes/REST/EnrollEndpoint.php:93
+msgid "The onboarding token from the SaaS dashboard."
+msgstr ""
+
+#: includes/Agent/Handlers/UpdateCommandHandler.php:52
+#: includes/Agent/Handlers/UpdateCommandHandler.php:69
+msgid "WordPress is already up to date."
+msgstr ""
+
+#: includes/Agent/Handlers/UpdateCommandHandler.php:84
+msgid "WordPress update failed."
+msgstr ""
+
+#: includes/Agent/Handlers/PageCommandHandler.php:45
+#: includes/Agent/Handlers/PageCommandHandler.php:136
+#: includes/Agent/Handlers/PageCommandHandler.php:199
+msgid "Page ID is missing."
+msgstr ""
+
+#: includes/Agent/Handlers/PageCommandHandler.php:50
+#: includes/Agent/Handlers/PostCommandHandler.php:51
+msgid "Invalid status."
+msgstr ""
+
+#: includes/Agent/Handlers/PageCommandHandler.php:55
+#: includes/Agent/Handlers/PageCommandHandler.php:141
+#: includes/Agent/Handlers/PageCommandHandler.php:204
+msgid "Page not found."
+msgstr ""
+
+#: includes/Agent/Handlers/PageCommandHandler.php:91
+#: includes/Agent/Handlers/PostCommandHandler.php:89
+msgid "Title is required."
+msgstr ""
+
+#: includes/Agent/Handlers/PageCommandHandler.php:209
+msgid "Page could not be deleted."
+msgstr ""
+
+#: includes/Agent/Handlers/CommentCommandHandler.php:42
+#: includes/Agent/Handlers/CommentCommandHandler.php:145
+msgid "Comment ID is missing."
+msgstr ""
+
+#: includes/Agent/Handlers/CommentCommandHandler.php:47
+msgid "Invalid moderation action."
+msgstr ""
+
+#: includes/Agent/Handlers/CommentCommandHandler.php:52
+#: includes/Agent/Handlers/CommentCommandHandler.php:150
+msgid "Comment not found."
+msgstr ""
+
+#: includes/Agent/Handlers/CommentCommandHandler.php:64
+msgid "Comment moderation failed."
+msgstr ""
+
+#: includes/Agent/Handlers/CommentCommandHandler.php:88
+#: includes/Agent/Handlers/PostCommandHandler.php:46
+#: includes/Agent/Handlers/PostCommandHandler.php:135
+#: includes/Agent/Handlers/PostCommandHandler.php:195
+msgid "Post ID is missing."
+msgstr ""
+
+#: includes/Agent/Handlers/CommentCommandHandler.php:91
+msgid "Comment content is missing."
+msgstr ""
+
+#: includes/Agent/Handlers/CommentCommandHandler.php:96
+#: includes/Agent/Handlers/PostCommandHandler.php:56
+#: includes/Agent/Handlers/PostCommandHandler.php:140
+#: includes/Agent/Handlers/PostCommandHandler.php:200
+msgid "Post not found."
+msgstr ""
+
+#: includes/Agent/Handlers/CommentCommandHandler.php:126
+msgid "Comment could not be created."
+msgstr ""
+
+#: includes/Agent/Handlers/CommentCommandHandler.php:155
+msgid "Comment could not be deleted."
+msgstr ""
+
+#: includes/Agent/Handlers/PluginCommandHandler.php:65
+msgid "Invalid plugin action."
+msgstr ""
+
+#: includes/Agent/Handlers/PluginCommandHandler.php:84
+#: includes/Agent/Handlers/PluginCommandHandler.php:137
+#: includes/Agent/Handlers/PluginCommandHandler.php:290
+#: includes/Agent/Handlers/PluginCommandHandler.php:370
+#, php-format
+msgid "Plugin not found: %s"
+msgstr ""
+
+#: includes/Agent/Handlers/PluginCommandHandler.php:101
+msgid "Action failed."
+msgstr ""
+
+#: includes/Agent/Handlers/PluginCommandHandler.php:107
+#: includes/Agent/Handlers/PluginCommandHandler.php:115
+#: includes/Agent/Handlers/PluginCommandHandler.php:125
+#: includes/Agent/Handlers/PluginCommandHandler.php:359
+msgid "Plugin file is missing."
+msgstr ""
+
+#: includes/Agent/Handlers/PluginCommandHandler.php:164
+#: includes/Agent/Handlers/PluginCommandHandler.php:278
+msgid "Plugin slug is missing."
+msgstr ""
+
+#: includes/Agent/Handlers/PluginCommandHandler.php:216
+#, php-format
+msgid "Plugin \"%s\" not found on WordPress.org."
+msgstr ""
+
+#: includes/Agent/Handlers/PluginCommandHandler.php:228
+msgid "Plugin installation failed."
+msgstr ""
+
+#: includes/Agent/Handlers/PluginCommandHandler.php:246
+msgid "Plugin installed, but file not found."
+msgstr ""
+
+#: includes/Agent/Handlers/PluginCommandHandler.php:311
+msgid "Plugin is already up to date."
+msgstr ""
+
+#: includes/Agent/Handlers/PluginCommandHandler.php:327
+#, php-format
+msgid "Plugin update failed: %s"
+msgstr ""
+
+#: includes/Agent/Handlers/PluginCommandHandler.php:383
+msgid "The Hubbee plugin cannot be uninstalled."
+msgstr ""
+
+#: includes/Agent/Handlers/PluginCommandHandler.php:402
+#, php-format
+msgid "Plugin deletion failed: %s"
+msgstr ""
+
+#: includes/Agent/Handlers/MediaCommandHandler.php:64
+#, php-format
+msgid "Media upload from URL failed: %s"
+msgstr ""
+
+#: includes/Agent/Handlers/MediaCommandHandler.php:83
+msgid "Invalid Base64 data."
+msgstr ""
+
+#: includes/Agent/Handlers/MediaCommandHandler.php:89
+msgid "File is too large (max. 10MB for Base64)."
+msgstr ""
+
+#: includes/Agent/Handlers/MediaCommandHandler.php:98
+msgid "Upload failed (invalid response)."
+msgstr ""
+
+#: includes/Agent/Handlers/MediaCommandHandler.php:106
+msgid "Upload failed (no file path)."
+msgstr ""
+
+#: includes/Agent/Handlers/MediaCommandHandler.php:131
+msgid "URL or Base64 data required."
+msgstr ""
+
+#: includes/Agent/Handlers/MediaCommandHandler.php:166
+#: includes/Agent/Handlers/MediaCommandHandler.php:216
+msgid "Media ID is missing."
+msgstr ""
+
+#: includes/Agent/Handlers/MediaCommandHandler.php:171
+#: includes/Agent/Handlers/MediaCommandHandler.php:221
+msgid "Media item not found."
+msgstr ""
+
+#: includes/Agent/Handlers/MediaCommandHandler.php:226
+msgid "Media item could not be deleted."
+msgstr ""
+
+#: includes/Agent/Handlers/TaxonomyCommandHandler.php:50
+msgid "Category name is missing."
+msgstr ""
+
+#: includes/Agent/Handlers/TaxonomyCommandHandler.php:82
+#: includes/Agent/Handlers/TaxonomyCommandHandler.php:127
+msgid "Category ID is missing."
+msgstr ""
+
+#: includes/Agent/Handlers/TaxonomyCommandHandler.php:87
+#: includes/Agent/Handlers/TaxonomyCommandHandler.php:138
+msgid "Category not found."
+msgstr ""
+
+#: includes/Agent/Handlers/TaxonomyCommandHandler.php:105
+#: includes/Agent/Handlers/TaxonomyCommandHandler.php:213
+msgid "No fields to update."
+msgstr ""
+
+#: includes/Agent/Handlers/TaxonomyCommandHandler.php:133
+msgid "The default category cannot be deleted."
+msgstr ""
+
+#: includes/Agent/Handlers/TaxonomyCommandHandler.php:146
+msgid "Category could not be deleted."
+msgstr ""
+
+#: includes/Agent/Handlers/TaxonomyCommandHandler.php:164
+msgid "Tag name is missing."
+msgstr ""
+
+#: includes/Agent/Handlers/TaxonomyCommandHandler.php:193
+#: includes/Agent/Handlers/TaxonomyCommandHandler.php:235
+msgid "Tag ID is missing."
+msgstr ""
+
+#: includes/Agent/Handlers/TaxonomyCommandHandler.php:198
+#: includes/Agent/Handlers/TaxonomyCommandHandler.php:240
+msgid "Tag not found."
+msgstr ""
+
+#: includes/Agent/Handlers/TaxonomyCommandHandler.php:248
+msgid "Tag could not be deleted."
+msgstr ""
+
+#: includes/Agent/Handlers/PostCommandHandler.php:205
+msgid "Post could not be deleted."
+msgstr ""
+
+#: includes/Agent/Handlers/ThemeCommandHandler.php:63
+msgid "No theme specified."
+msgstr ""
+
+#: includes/Agent/Handlers/ThemeCommandHandler.php:71
+#: includes/Agent/Handlers/ThemeCommandHandler.php:101
+#: includes/Agent/Handlers/ThemeCommandHandler.php:221
+#: includes/Agent/Handlers/ThemeCommandHandler.php:293
+#, php-format
+msgid "Theme not found: %s"
+msgstr ""
+
+#: includes/Agent/Handlers/ThemeCommandHandler.php:83
+#: includes/Agent/Handlers/ThemeCommandHandler.php:93
+#: includes/Agent/Handlers/ThemeCommandHandler.php:128
+#: includes/Agent/Handlers/ThemeCommandHandler.php:209
+#: includes/Agent/Handlers/ThemeCommandHandler.php:282
+msgid "Theme slug is missing."
+msgstr ""
+
+#: includes/Agent/Handlers/ThemeCommandHandler.php:166
+#, php-format
+msgid "Theme \"%s\" not found on WordPress.org."
+msgstr ""
+
+#: includes/Agent/Handlers/ThemeCommandHandler.php:178
+msgid "Theme installation failed."
+msgstr ""
+
+#: includes/Agent/Handlers/ThemeCommandHandler.php:183
+msgid "Theme installed, but not found."
+msgstr ""
+
+#: includes/Agent/Handlers/ThemeCommandHandler.php:238
+msgid "Theme is already up to date."
+msgstr ""
+
+#: includes/Agent/Handlers/ThemeCommandHandler.php:254
+#, php-format
+msgid "Theme update failed: %s"
+msgstr ""
+
+#: includes/Agent/Handlers/ThemeCommandHandler.php:301
+msgid "The active theme cannot be deleted."
+msgstr ""
+
+#: includes/Agent/Handlers/ThemeCommandHandler.php:308
+msgid "The parent theme of the active theme cannot be deleted."
+msgstr ""
+
+#: includes/Agent/Handlers/ThemeCommandHandler.php:319
+#, php-format
+msgid "Theme deletion failed: %s"
+msgstr ""
+
+#: includes/Agent/Handlers/ThemeCommandHandler.php:323
+msgid "Theme deletion failed."
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:33
+msgid "You do not have permission to access this page."
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:44
+msgid "Hubbee Agent"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:54
+msgid "Connected"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:55
+msgid "Not connected"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:65
+#, php-format
+msgid "Last synchronization: %s"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:76
+msgid "Connect site"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:83
+#: includes/Admin/Pages/SettingsPage.php:86
+msgid "Generate token"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:84
+msgid ""
+"Log in to the Hubbee SaaS and generate an onboarding token for this site."
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:96
+msgid "Enter token"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:97
+msgid "Copy the generated token and paste it here."
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:110
+msgid "Connect"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:113
+msgid "Establish connection"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:123
+msgid ""
+"The connection is still being established – this may take a moment. Please "
+"wait or try again."
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:132
+msgid "Hubbee Site ID"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:137
+msgid "Site Name"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:142
+msgid "Connected since"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:153
+msgid "Advanced settings"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:159
+msgid "Local Site ID"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:163
+msgid "REST API URL"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:167
+msgid "Plugin Version"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:174
+msgid "Check connection"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:176
+msgid "Tests whether the current connection to the Hubbee SaaS is working."
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:179
+msgid "Test connection"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:185
+msgid ""
+"The test is still running – please be patient for a moment or try again."
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:190
+msgid "Reset connection"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:192
+msgid ""
+"Disconnects from the Hubbee SaaS. You will need to reconnect the site "
+"afterwards."
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:195
+msgid "Disconnect"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:111
+msgid "Choose whether this site should report visitor analytics, then establish the connection."
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:116
+msgid "Send visitor analytics to Hubbee"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:119
+msgid "Loads a small, cookieless script on your public pages and reports page path, a random per-session hash, referrer domain and user agent. No cookies, no cross-site tracking, no personal profiles. Leave this unchecked and Hubbee never loads the script; you can change it at any time in your Hubbee dashboard under workspace settings."
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:122
+msgid "If you enable this, disclose the analytics in your own privacy policy — you remain the controller for your visitors' data."
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:160
+msgid "Visitor analytics"
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:172
+msgid "On — switch it off in your Hubbee dashboard under workspace settings."
+msgstr ""
+
+#: includes/Admin/Pages/SettingsPage.php:173
+msgid "Off — no tracking script is loaded on this site."
+msgstr ""
+
+#: includes/REST/EnrollEndpoint.php:104
+msgid "Whether this site should send visitor analytics to Hubbee. Defaults to enabled."
 msgstr ""

@@ -53,18 +53,17 @@ tail -f wp-content/debug.log | grep Hubbee
 
 | Symptom | Cause | Solution |
 |---------|-------|----------|
-| Component in manifest but deleted in SaaS | Manifest cache stale | WP Admin → Hubbee → Clear Cache |
+| Component in manifest but deleted in SaaS | Manifest cache stale | Push again from Hubbee, or fire `hubbee_cache_purge_needed` |
 | Not in manifest but visible | Page cache | Purge WP Rocket/LiteSpeed cache |
 | SSR fallback visible, no React | JavaScript error | Check browser console for errors |
 | Elementor shows old data | Widget cache | Elementor → Regenerate CSS & Data |
 | Cloudflare cached version | CDN cache | Purge Cloudflare cache |
 
 **Nuclear Option (clear all caches):**
-```bash
-# WP-CLI
-wp hubbee cache clear --all
 
-# Or via PHP
+Every push purges the plugin's own caches automatically. To force it outside a
+push, fire the action the AgentManager listens on:
+```php
 do_action('hubbee_cache_purge_needed');
 ```
 
@@ -190,21 +189,18 @@ HubbeeLive.hydrate();
 JSON.parse(document.getElementById('bz-manifest-data')?.textContent || '{}')
 ```
 
-### WP-CLI Commands
+### Admin actions
 
-```bash
-# Check Hubbee connection status
-wp hubbee status
+The plugin ships no WP-CLI commands. WP Admin → Hubbee → Settings offers
+exactly three actions:
 
-# Clear all caches
-wp hubbee cache clear --all
+- **Connect** — exchange a connection code for the per-site secret
+- **Test connection** — round-trip check against the Hubbee API
+- **Disconnect** — drop the secret and halt all outbound calls
 
-# Force manifest refresh
-wp hubbee manifest refresh
-
-# List local components
-wp hubbee components list
-```
+Everything else is driven from the Hubbee dashboard: component and token state
+come down with each push, and the remote debug-log viewer reads `debug.log`
+without shell access.
 
 ---
 

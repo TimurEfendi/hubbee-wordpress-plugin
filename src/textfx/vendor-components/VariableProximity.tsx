@@ -25,8 +25,9 @@ function useMousePositionRef(containerRef: RefObject<HTMLElement>) {
 
   useEffect(() => {
     const updatePosition = (x: number, y: number) => {
-      if (containerRef?.current) {
-        const rect = containerRef.current.getBoundingClientRect();
+      const container = containerRef?.current;
+      if (container) {
+        const rect = container.getBoundingClientRect();
         positionRef.current = { x: x - rect.left, y: y - rect.top };
       } else {
         positionRef.current = { x, y };
@@ -120,13 +121,14 @@ const VariableProximity = forwardRef<HTMLSpanElement, VariableProximityProps>((p
   };
 
   useAnimationFrame(() => {
-    if (!containerRef?.current) return;
+    const container = containerRef?.current;
+    if (!container) return;
     const { x, y } = mousePositionRef.current;
     if (lastPositionRef.current.x === x && lastPositionRef.current.y === y) {
       return;
     }
     lastPositionRef.current = { x, y };
-    const containerRect = containerRef.current.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
 
     letterRefs.current.forEach((letterRef, index) => {
       if (!letterRef) return;
